@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Saboteur Game</title>
+    <!-- resources -->
+    <script src='//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.min.js'></script>
+    <!-- model -->
+    <script src='node_modules/socket.io-client/dist/socket.io.js'></script>
+    <script src='model/core/ActionType.js'></script>
+    <script src='model/core/MessageType.js'></script>
+    <script src='model/core/ChatPictureType.js'></script>
+    <script src='model/core/PlayerData.js'></script>
+    <script src='model/socket/Socket.js'></script>
+    <!-- view -->
+    <script src='scene/BaseScene.js'></script>
+    <script src='scene/MessageScene.js'></script>
+    <script src='scene/LoadScene.js'></script>
+    <script src='scene/FrontCoverScene.js'></script>
+    <script src='scene/LobbyScene.js'></script>
+    <script src='scene/RoomScene.js'></script>
+    <script src='scene/GameScene.js'></script>
+    <!-- module -->
+    <script src='scene/module/BaseModule.js'></script>
+    <script src='scene/module/lobby/RoomInfo.js'></script>
+    <script src='scene/module/lobby/CreateRoom.js'></script>
+    <script src='scene/module/room/RoomChat.js'></script>
+    <script src='scene/module/room/RoomPlayerInfo.js'></script>
+    <script src='scene/module/game/GameChat.js'></script>
+    <script src='scene/module/game/PlayerInfo.js'></script>
+    <script src='scene/module/game/MainPlayerInfo.js'></script>
+    <script src='scene/module/game/OtherPlayerInfo.js'></script>
+    <script src='scene/module/game/WatchCardAnims.js'></script>
+    <script src='scene/module/game/GameFinishAnims.js'></script>
+    <script src='scene/module/game/main/ActionAnims.js'></script>
+    <!-- action -->
+    <script src='action/Action.js'></script>
+    <script src='action/InitGameAction.js'></script>
+    <script src='action/MessageAction.js'></script>
+    <script src='action/LoadAction.js'></script>
+    <script src='action/LoginAction.js'></script>
+    <script src='action/JoinLobbyAction.js'></script>
+    <script src='action/UpdateRoomListAction.js'></script>
+    <script src='action/CreateRoomAction.js'></script>
+    <script src='action/JoinRoomAction.js'></script>
+    <script src='action/UpdateRoomInfoAction.js'></script>
+    <script src='action/LeaveRoomAction.js'></script>
+    <script src='action/KickAction.js'></script>
+    <script src='action/RoomChatAction.js'></script>
+    <script src='action/UpdateReadyGameAction.js'></script>
+    <script src='action/AddRobotAction.js'></script>
+    <script src='action/CreateGameAction.js'></script>
+    <script src='action/JoinGameAction.js'></script>
+    <script src='action/UpdateGameInfoAction.js'></script>
+    <script src='action/ActionPlayerAction.js'></script>
+    <script src='action/UpdateCountdownAction.js'></script>
+    <script src='action/PutCardAction.js'></script>
+    <script src='action/TakeCardAction.js'></script>
+    <script src='action/MapActionAction.js'></script>
+    <script src='action/AppointActionAction.js'></script>
+    <script src='action/LeaveGameAction.js'></script>
+    <script src='action/FinishGameAction.js'></script>
+    <script src='action/ReGameAction.js'></script>
+    <script src='action/GameChatAction.js'></script>
+    <script src='action/ForceConnectAction.js'></script>
+    <!-- service -->
+    <script src='service/SoundService.js'></script>
+    <script src='service/InputService.js'></script>
+    <!-- main -->
+    <script src='Main.js'></script>
+    <!-- css -->
+    <style>
+        .baseInput {
+            position: absolute;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            display: none;
+            font-family: 'Microsoft JhengHei';
+        }
+
+        .nameInput {
+            left: 385px;
+            top: 646px;
+            font-size: 20px;
+            text-align: center;
+            width: 275px;
+        }
+
+        .roomInput {
+            left: 840px;
+            top: 283px;
+            font-size: 18px;
+            width: 140px;
+        }
+
+        .roomChatInput {
+            left: 170px;
+            top: 509px;
+            font-size: 20px;
+            width: 695px;
+        }
+
+        .gameChatInput {
+            left: 30px;
+            top: 764px;
+            font-size: 16px;
+            width: 195px;
+        }
+
+        .hiddenInput{
+            left: -1000px;
+        }
+    </style>
+</head>
+
+<body style="margin: 0px;" onresize="onResize()">
+    <div id="gameContent" style="position: absolute;">
+        <input id="nameInput" placeholder="Enter Your Name" type="text" class="baseInput nameInput">
+        <input id="roomInput" placeholder="Enter Name" type="text" class="baseInput roomInput">
+        <input id="roomChatInput" placeholder="Enter Your Message" type="text" class="baseInput roomChatInput">
+        <input id="gameChatInput" placeholder="Enter Your Message" type="text" class="baseInput gameChatInput">
+    </div>
+</body>
+
+</html>
