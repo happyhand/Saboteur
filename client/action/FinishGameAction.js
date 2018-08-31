@@ -14,7 +14,7 @@ class FinishGameAction extends Action {
     response(data) {
         switch (data[0]) {
             case -1:
-                new MessageAction().action(MessageType.SYS_THE_GAME_HAS_BEEN_CLOSED);
+                new MessageAction().action([MessageType.SYS_THE_GAME_HAS_BEEN_CLOSED]);
                 new LoadAction().action();
                 break;
             case 1:

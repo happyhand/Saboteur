@@ -67,4 +67,23 @@ class PlayerInfo extends BaseModule {
 
         return -1; //// -1:None, 0:Fix, 1:Atk
     }
+
+    /**
+     * 檢查是否被破壞工具
+     * @returns bool
+     * @memberof PlayerInfo
+     */
+    isLock()
+    {
+        let isLock = false;
+        for (let i = 0; i < 3; i++) {
+            let lock = this.locks[i];
+            if (lock.frame.name === i) {
+                isLock = true;
+                break;
+            }
+        }
+
+        return isLock;
+    }
 }

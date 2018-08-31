@@ -17,8 +17,6 @@ class FrontCoverScene extends BaseScene {
             frameWidth: 90,
             frameHeight: 90
         });
-        this.load.audio('frontcover', 'assets/sound/Frontcover.mp3');
-        this.load.audio('loginClick', 'assets/sound/LoginClick.mp3');
     }
 
     /**
@@ -54,9 +52,6 @@ class FrontCoverScene extends BaseScene {
         //// create message background
         this.messageBackground = this.add.image(525, 400, 'frontCoverMessageBackground').setInteractive();
         this.messageBackground.visible = false;
-        //// create sound
-        SoundService.getInstance().onRegister('frontcover', this.sound.add('frontcover'));
-        SoundService.getInstance().onRegister('loginClick', this.sound.add('loginClick'));
 
         super.create();
     }
@@ -92,8 +87,11 @@ class FrontCoverScene extends BaseScene {
             case ActionType.JOIN_GAME:
                 this.onSleep();
                 break;
+            case ActionType.JOIN_WATCH_GAME:
+                this.onSleep();
+                break;
             case ActionType.SYSTEM_MESSAGE:
-                this.messageBackground.visible = data !== MessageType.NONE;
+                this.messageBackground.visible = data[0] !== MessageType.NONE;
                 break;
         }
     }
@@ -135,7 +133,7 @@ class FrontCoverScene extends BaseScene {
             this.playButton.input.enabled = false;
             new LoginAction().action(name);
         } else {
-            new MessageAction().action(MessageType.SYS_MISS_PLAYER_NAME);
+            new MessageAction().action([MessageType.SYS_MISS_PLAYER_NAME]);
         }
     }
 }

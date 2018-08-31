@@ -17,7 +17,7 @@ class LeaveRoomAction extends Action {
     response(data) {
         switch (data) {
             case 2:
-                new MessageAction().action(MessageType.SYS_LEAVE_ROOM_KICKED);
+                new MessageAction().action([MessageType.SYS_LEAVE_ROOM_KICKED]);
                 break;
         }
     }

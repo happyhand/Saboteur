@@ -327,9 +327,9 @@ class GameChat extends BaseModule {
     onDragSlider(dragY) {
         this.slider.y = dragY;
         if (this.slider.y < TOP_OF_GAME_CHAT_SLIDER.y) {
-            this.slider.y = TOP_OF_GAME_CHAT_SLIDER.y
+            this.slider.y = TOP_OF_GAME_CHAT_SLIDER.y;
         } else if (this.slider.y > BOTTOM_OF_GAME_CHAT_SLIDER.y) {
-            this.slider.y = BOTTOM_OF_GAME_CHAT_SLIDER.y
+            this.slider.y = BOTTOM_OF_GAME_CHAT_SLIDER.y;
         }
 
         this.onHandleMessage();
@@ -343,9 +343,9 @@ class GameChat extends BaseModule {
     onWheelSlider(delta) {
         this.slider.y -= delta;
         if (this.slider.y < TOP_OF_GAME_CHAT_SLIDER.y) {
-            this.slider.y = TOP_OF_GAME_CHAT_SLIDER.y
+            this.slider.y = TOP_OF_GAME_CHAT_SLIDER.y;
         } else if (this.slider.y > BOTTOM_OF_GAME_CHAT_SLIDER.y) {
-            this.slider.y = BOTTOM_OF_GAME_CHAT_SLIDER.y
+            this.slider.y = BOTTOM_OF_GAME_CHAT_SLIDER.y;
         }
 
         this.onHandleMessage();

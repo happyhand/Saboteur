@@ -53,7 +53,7 @@ class RoomInfo extends BaseModule {
         this.roomButton.on('pointerup', function (pointer) {
             let isPlaying = this.frame.name === 1;
             if (isPlaying) {
-                new MessageAction().action(MessageType.SYS_THE_GAME_IS_RUNNING);
+                new MessageAction().action([MessageType.SYS_THE_GAME_IS_RUNNING, this.value]);
             } else {
                 self.scene.onSwitchActionButton(false);
                 new JoinRoomAction().action(this.value);

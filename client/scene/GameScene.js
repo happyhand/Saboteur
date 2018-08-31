@@ -1,19 +1,17 @@
 const MAX_OF_GAME_PLAYER = 7;
-const MAX_OF_MAIN_CARD = 6;
-const MAX_OF_GAME_CHAT_ROW = 8;
 class GameScene extends BaseScene {
     constructor() {
         super('GameScene');
         this.mapCards = null;
         this.collapseAnims = null;
         this.digAnims = null;
-        this.exitButton = null;
         this.gameChat = null;
         this.otherPlayerInfos = null;
-        this.remainCardTxt = null;
+        this.gameCardNo = null;
         this.mainPlayerInfo = null;
         this.watchCardAnims = null;
         this.gameFinishAnims = null;
+        this.gameDescription = null;
         this.enableMask = null;
         this.messageBackground = null;
     }
@@ -27,6 +25,7 @@ class GameScene extends BaseScene {
         this.load.image('gameBackground', 'assets/game/GameBackground.png');
         this.load.image('gameAppointMark', 'assets/game/GameAppointMark.png');
         this.load.image('gameFixMark', 'assets/game/GameFixMark.png');
+        this.load.image('gameCardDisable', 'assets/game/GameCardDisable.png');
         this.load.image('gameTransformButton', 'assets/game/GameTransformButton.png');
         this.load.image('gameWatchCardFrame', 'assets/game/GameWatchCardFrame.png');
         this.load.image('gameChatBar', 'assets/game/GameChatBar.png');
@@ -40,6 +39,8 @@ class GameScene extends BaseScene {
         this.load.image('gameFinishInfoFrame', 'assets/game/GameFinishInfoFrame.png');
         this.load.image('gameFinishReJoinButton', 'assets/game/GameFinishReJoinButton.png');
         this.load.image('gameFinishExitButton', 'assets/game/GameFinishExitButton.png');
+        this.load.image('gameDescriptionButton', 'assets/game/GameDescriptionButton.png');
+        this.load.image('gameDescriptionBackground', 'assets/game/GameDescriptionBackground.png');
         this.load.image('gameEnableMask', 'assets/game/GameEnableMask.png');
         this.load.image('gameMessageBackground', 'assets/game/GameMessageBackground.png');
         this.load.spritesheet('gameCard', 'assets/game/GameCard.png', {
@@ -98,6 +99,10 @@ class GameScene extends BaseScene {
             frameWidth: 60,
             frameHeight: 60
         });
+        this.load.spritesheet('gameCardNo', 'assets/game/GameCardNo.png', {
+            frameWidth: 40,
+            frameHeight: 40
+        });
         this.load.spritesheet('gameMainLocks', 'assets/game/GameMainLocks.png', {
             frameWidth: 45,
             frameHeight: 45
@@ -122,11 +127,18 @@ class GameScene extends BaseScene {
             frameWidth: 450,
             frameHeight: 350
         });
-        this.load.audio('game', 'assets/sound/Game.mp3');
-        this.load.audio('actionCountDown', 'assets/sound/ActionCountDown.mp3');
-        this.load.audio('putCard', 'assets/sound/PutCard.mp3');
-        this.load.audio('goodManWin', 'assets/sound/GoodManWin.mp3');
-        this.load.audio('badManWin', 'assets/sound/BadManWin.mp3');
+        this.load.spritesheet('gameDescription', 'assets/game/GameDescription.png', {
+            frameWidth: 650,
+            frameHeight: 600
+        });
+        this.load.spritesheet('gameDescriptionSelect', 'assets/game/GameDescriptionSelect.png', {
+            frameWidth: 50,
+            frameHeight: 60
+        });
+        this.load.spritesheet('gameDescriptionExitButton', 'assets/game/GameDescriptionExitButton.png', {
+            frameWidth: 34,
+            frameHeight: 34
+        });
     }
 
     /**
@@ -146,24 +158,22 @@ class GameScene extends BaseScene {
         this.onCreateGameRoundInfo();
         //// create chat elements
         this.onCreateChatElements();
+        //// create game description button elements
+        this.onCreateGameDescriptionButton();
         //// create watch card anims
         this.watchCardAnims = new WatchCardAnims(this);
         this.watchCardAnims.onInit();
         //// create game finish anims
         this.gameFinishAnims = new GameFinishAnims(this);
         this.gameFinishAnims.onInit();
+        //// create game description
+        this.onCreateGameDescription();
         //// create message background
         this.enableMask = this.add.image(525, 400, 'gameEnableMask').setInteractive();
         this.enableMask.visible = false;
         //// create message background
         this.messageBackground = this.add.image(525, 400, 'gameMessageBackground').setInteractive();
         this.messageBackground.visible = false;
-        //// create sound
-        SoundService.getInstance().onRegister('game', this.sound.add('game'));
-        SoundService.getInstance().onRegister('actionCountDown', this.sound.add('actionCountDown'));
-        SoundService.getInstance().onRegister('putCard', this.sound.add('putCard'));
-        SoundService.getInstance().onRegister('goodManWin', this.sound.add('goodManWin'));
-        SoundService.getInstance().onRegister('badManWin', this.sound.add('badManWin'));
 
         super.create();
     }
@@ -199,41 +209,55 @@ class GameScene extends BaseScene {
                 this.mainPlayerInfo.onInitGameData(data);
                 SoundService.getInstance().onPlay('game', true);
                 break;
+            case ActionType.JOIN_WATCH_GAME:
+                this.onSleep();
+                break;
             case ActionType.UPDATE_GAME_INFO:
+                if (this.scene.isSleeping()) return;
                 this.onUpdateGameInfo(data);
                 break;
             case ActionType.ACTION_PLAYER:
+                if (this.scene.isSleeping()) return;
                 this.onUpdateAction(data);
                 break;
             case ActionType.UPDATE_COUNTDOWN:
+                if (this.scene.isSleeping()) return;
                 this.mainPlayerInfo.onUpdateCountdown(data);
                 break;
             case ActionType.PUT_CARD:
+                if (this.scene.isSleeping()) return;
                 this.mainPlayerInfo.onPutCard(data);
                 break;
             case ActionType.TAKE_CARD:
+                if (this.scene.isSleeping()) return;
                 this.mainPlayerInfo.onTakeCard(data);
                 break;
             case ActionType.DIG_ANIMS:
+                if (this.scene.isSleeping()) return;
                 this.onPlayDigAnims(data);
                 break;
             case ActionType.COLLAPSE_ANIMS:
+                if (this.scene.isSleeping()) return;
                 this.onPlayCollapseAnims(data);
                 break;
             case ActionType.WATCH_CARD:
+                if (this.scene.isSleeping()) return;
                 this.watchCardAnims.onPlay(data);
                 break;
             case ActionType.ACTION_ANIMS:
+                if (this.scene.isSleeping()) return;
                 this.mainPlayerInfo.onPlayActionAnims(data);
                 break;
             case ActionType.GAME_OVER:
+                if (this.scene.isSleeping()) return;
                 this.onGameFinishAnims(data);
                 break;
             case ActionType.GAME_CHAT:
+                if (this.scene.isSleeping()) return;
                 this.onReceiveGameChat(data);
                 break;
             case ActionType.SYSTEM_MESSAGE:
-                this.messageBackground.visible = data !== MessageType.NONE;
+                this.messageBackground.visible = data[0] !== MessageType.NONE;
                 break;
         }
     }
@@ -248,6 +272,7 @@ class GameScene extends BaseScene {
         }
 
         this.gameChat.onEnable();
+        this.gameDescription.onCloseGameDescription();
         this.onSwitchActionButton(true);
     }
 
@@ -263,6 +288,7 @@ class GameScene extends BaseScene {
         this.gameChat.onDisable(true);
         this.mainPlayerInfo.unAction();
         this.gameFinishAnims.unPlay();
+        this.gameDescription.onCloseGameDescription();
         this.onSwitchActionButton(false);
     }
 
@@ -318,15 +344,15 @@ class GameScene extends BaseScene {
      */
     onCreateExitButton() {
         let self = this;
-        this.exitButton = this.add.sprite(1025, 25, 'gameExitButton').setInteractive();
-        this.exitButton.on('pointerover', function (pointer) {
+        let exitButton = this.add.sprite(1025, 25, 'gameExitButton').setInteractive();
+        exitButton.on('pointerover', function (pointer) {
             this.setFrame(1);
         });
-        this.exitButton.on('pointerout', function (pointer) {
+        exitButton.on('pointerout', function (pointer) {
             this.setFrame(0);
         });
-        this.exitButton.on('pointerup', function (pointer) {
-            self.onRequestExitGame(true);
+        exitButton.on('pointerup', function (pointer) {
+            self.onRequestExitGame();
         });
     }
 
@@ -363,11 +389,7 @@ class GameScene extends BaseScene {
      * @memberof GameScene
      */
     onCreateGameRoundInfo() {
-        this.remainCardTxt = this.add.text(885, 615, '', {
-            fontFamily: 'Microsoft JhengHei',
-            fontSize: 30,
-            color: '#000000'
-        });
+        this.gameCardNo = this.add.sprite(903, 633, 'gameCardNo');
     }
 
     /**
@@ -377,6 +399,27 @@ class GameScene extends BaseScene {
     onCreateChatElements() {
         this.gameChat = new GameChat(this);
         this.gameChat.onInit();
+    }
+
+    /**
+     * 創建遊戲說明按鈕元件
+     * @memberof GameScene
+     */
+    onCreateGameDescriptionButton() {
+        let self = this;
+        let gameDescriptionButton = this.add.image(1025, 585, 'gameDescriptionButton').setInteractive();
+        gameDescriptionButton.on('pointerup', function (pointer) {
+            self.gameDescription.onShowGameDescription();
+        });
+    }
+
+    /**
+     * 創建遊戲說明元件
+     * @memberof GameScene
+     */
+    onCreateGameDescription() {
+        this.gameDescription = new GameDescription(this);
+        this.gameDescription.onInit();
     }
 
     /**
@@ -399,7 +442,7 @@ class GameScene extends BaseScene {
             }
         }
         //// update no of remain card
-        this.remainCardTxt.setText(data.noOfRemainCard);
+        this.gameCardNo.setFrame(data.noOfRemainCard);
         //// update data
         let playerDatas = data.players;
         let mainPlayerName = PlayerData.getInstance().nickname;
@@ -567,11 +610,11 @@ class GameScene extends BaseScene {
 
     /**
      * Main Player 請求離開遊戲
-     * @param {bool} useMask
      * @memberof GameScene
      */
-    onRequestExitGame(useMask) {
-        this.onSwitchActionButton(!useMask);
+    onRequestExitGame() {
+        this.gameFinishAnims.unPlay();
+        this.onSwitchActionButton(false);
         new LeaveGameAction().action();
     }
 

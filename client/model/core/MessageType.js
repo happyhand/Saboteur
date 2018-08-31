@@ -170,6 +170,26 @@ class MessageType {
     }
 
     /**
+     * 遊戲不存在
+     * @readonly
+     * @static
+     * @memberof MessageType
+     */
+    static get SYS_GAME_NOT_EXIST() {
+        return "SYS_GAME_NOT_EXIST";
+    }
+
+    /**
+     * 已加入關看遊戲
+     * @readonly
+     * @static
+     * @memberof MessageType
+     */
+    static get SYS_CLIENT_ALREADY_WATCH() {
+        return "SYS_CLIENT_ALREADY_WATCH";
+    }
+
+    /**
      * 伺服器拒絕連線
      * @readonly
      * @static

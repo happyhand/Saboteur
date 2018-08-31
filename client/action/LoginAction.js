@@ -16,9 +16,9 @@ class LoginAction extends Action {
      */
     response(data) {
         if (data[0] === 1) {
-            PlayerData.getInstance().nickname = data[1]
+            PlayerData.getInstance().nickname = data[1];
         } else {
-            new MessageAction().action(MessageType.SYS_LOGIN_FAIL);
+            new MessageAction().action([MessageType.SYS_LOGIN_FAIL]);
             this.do(ActionType.LOGIN_ERROR);
         }
     }

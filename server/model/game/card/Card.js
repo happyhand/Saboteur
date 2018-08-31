@@ -110,6 +110,7 @@ class Card {
             case Card.ENDROAD_BACK_TYPE:
                 this.typeIndex = 31;
                 this.cardType = -1;
+                this.isBack = true;
                 break;
             case Card.FIX_LIGHT:
                 this.fixOrAtk = [1, 0, 0];

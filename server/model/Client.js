@@ -116,6 +116,14 @@ class Client {
                 let gameMessage = data[1];
                 client.doGameChat(gameMessage);
                 break;
+            case 'joinWatchGame':
+                let watchRoomID = data[1];
+                client.doJoinWatchGame(watchRoomID);
+                break;
+            case 'leaveWatchGame':
+                let leaveWatchRoomID = data[1];
+                client.doLeaveWatchGame(leaveWatchRoomID);
+                break;
         }
     }
     //#endregion
@@ -350,6 +358,32 @@ class Client {
     }
 
     /**
+     * 請求加入觀看遊戲
+     * @param {string} roomID
+     * @memberof Client
+     */
+    doJoinWatchGame(roomID) {
+        let room = this.lobby.getRoom(roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onJoinWatchGame(this);
+    }
+
+    /**
+     * 請求離開觀看遊戲
+     * @param {string} roomID
+     * @memberof Client
+     */
+    doLeaveWatchGame(roomID) {
+        let room = this.lobby.getRoom(roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onLeaveWatchGame(this);
+    }
+
+    /**
      * 請求 Logout
      * @memberof Client
      */
@@ -423,7 +457,7 @@ class Client {
         this.socket.join(roomID);
         this.roomID = roomID;
         this.isReadyGame = false;
-        this.onSendResponse('joinRoom', 1);
+        this.onSendResponse('joinRoom', [1]);
         this.lobby.onBroadcastCurrentRoomList();
     }
 
@@ -434,16 +468,17 @@ class Client {
      */
     onReJoinRoom(masterName) {
         this.isReadyGame = this.nickname === masterName;
-        this.onSendResponse('joinRoom', 1);
+        this.onSendResponse('joinRoom', [1]);
     }
 
     /**
      * 客端加入房間 Error
      * @param {int} result
+     * @param {string} roomID
      * @memberof Client
      */
-    onJoinRoomError(result) {
-        this.onSendResponse('joinRoom', [result, '']);
+    onJoinRoomError(result, roomID) {
+        this.onSendResponse('joinRoom', [result, roomID]);
     }
 
     /**
@@ -478,6 +513,7 @@ class Client {
         this.socket.join(gameID);
         this.onSendResponse('joinGame', data);
     }
+
 
     /**
      * 客端更新遊戲資訊
@@ -542,6 +578,41 @@ class Client {
      */
     onLeaveGame(gameID) {
         this.socket.leave(gameID);
+    }
+
+    /**
+     * 客端加入觀看遊戲
+     * @param {string} roomID
+     * @param {string} gameID
+     * @param {object} data
+     * @param {string} action
+     * @memberof Client
+     */
+    onJoinWatchGame(roomID, gameID, data, action) {
+        this.roomID = roomID;
+        this.socket.leave('lobby');
+        this.socket.join(gameID);
+        this.onSendResponse('joinWatchGame', [1, roomID, data, action]);
+    }
+
+    /**
+     * 客端加入觀看遊戲 Error
+     * @param {int} result
+     * @memberof Client
+     */
+    onJoinWatchGameError(result) {
+        this.onSendResponse('joinWatchGame', [result, '', null, null]);
+    }
+
+    /**
+     * 客端離開觀看遊戲
+     * @param {string} gameID
+     * @memberof Client
+     */
+    onLeaveWatchGame(gameID) {
+        this.roomID = '';
+        this.socket.leave(gameID);
+        this.doJoinLobby();
     }
 
     /**

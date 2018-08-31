@@ -5,6 +5,7 @@ class PlayerData {
         if(!Class[PLAYER_DATA_INSTANCE]) {
             Class[PLAYER_DATA_INSTANCE] = this;
             this.nickname = '';
+            this.roomID = '';
         }
         
         return Class[PLAYER_DATA_INSTANCE];

@@ -5,6 +5,7 @@ class Game {
         this.id = id;
         this.countdown = countdown;
         this.clients = null;
+        this.watchClients = null;
         this.map = null;
         this.possibleRoads = null;
         this.players = null;
@@ -145,7 +146,7 @@ class Game {
             let nickname = client.nickname;
             let identity = roleCards.shift();
             let cards = noOfPlayer >= 6 ? this.remainCards.splice(0, 5) : this.remainCards.splice(0, 6);
-            let player = !client.isRobot ? new playerClass(client, identity, cards) : new robotPlayerClass(client, identity, cards);
+            let player = !client.isRobot ? new playerClass(client, identity, cards) : new robotPlayerClass(client, identity, cards, this.map);
             this.players[nickname] = player;
             this.actionList.push(nickname);
         }
@@ -163,6 +164,7 @@ class Game {
      */
     onInitGame(clients) {
         let cardClass = require('./card/Card.js');
+        this.watchClients = [];
         this.onCreateMap(cardClass);
         this.onCreateCard(cardClass);
         this.onCreatePlayer(clients);
@@ -198,6 +200,7 @@ class Game {
             return;
         }
 
+        let digCard = null;
         if (player.canDig()) {
             //// put card on the map
             let possibleRoadData = this.possibleRoads[digKey];
@@ -205,44 +208,46 @@ class Game {
                 let checkRoads = isReverse ? possibleRoadData.reverseCards : possibleRoadData.cards;
                 if (checkRoads[digType]) {
                     let cardClass = require('./card/Card.js');
-                    let digCard = new cardClass(digType);
+                    digCard = new cardClass(digType);
                     digCard.setReverse(isReverse);
                     this.map[digKey] = digCard;
-                    let digRoad = digCard.getRoad();
-                    switch (digKey) {
-                        case '7_0':
-                            if (digRoad[1] === 1) {
-                                this.map['8_0'].isBack = false;
-                            }
-                            break;
-                        case '8_1':
-                            if (digRoad[0] === 1) {
-                                this.map['8_0'].isBack = false;
-                            }
+                    if (digCard.cardType === 1) {
+                        let digRoad = digCard.getRoad();
+                        switch (digKey) {
+                            case '7_0':
+                                if (digRoad[1] === 1) {
+                                    this.map['8_0'].isBack = false;
+                                }
+                                break;
+                            case '8_1':
+                                if (digRoad[0] === 1) {
+                                    this.map['8_0'].isBack = false;
+                                }
 
-                            if (digRoad[3] === 1) {
-                                this.map['8_2'].isBack = false;
-                            }
-                            break;
-                        case '7_2':
-                            if (digRoad[1] === 1) {
-                                this.map['8_2'].isBack = false;
-                            }
-                            break;
-                        case '8_3':
-                            if (digRoad[0] === 1) {
-                                this.map['8_2'].isBack = false;
-                            }
+                                if (digRoad[3] === 1) {
+                                    this.map['8_2'].isBack = false;
+                                }
+                                break;
+                            case '7_2':
+                                if (digRoad[1] === 1) {
+                                    this.map['8_2'].isBack = false;
+                                }
+                                break;
+                            case '8_3':
+                                if (digRoad[0] === 1) {
+                                    this.map['8_2'].isBack = false;
+                                }
 
-                            if (digRoad[3] === 1) {
-                                this.map['8_4'].isBack = false;
-                            }
-                            break;
-                        case '7_4':
-                            if (digRoad[1] === 1) {
-                                this.map['8_4'].isBack = false;
-                            }
-                            break;
+                                if (digRoad[3] === 1) {
+                                    this.map['8_4'].isBack = false;
+                                }
+                                break;
+                            case '7_4':
+                                if (digRoad[1] === 1) {
+                                    this.map['8_4'].isBack = false;
+                                }
+                                break;
+                        }
                     }
                 }
             }
@@ -251,7 +256,7 @@ class Game {
         player.onPutCard(cardNo);
         this.possibleRoads = this.onSearchPossibleRoad('0_2', ['0_2'], {});
         this.onBroadcastDigRoad(digKey);
-        this.onGameRecord(0, nickname, null, digKey);
+        this.onGameRecord(0, nickname, null, digKey, digCard);
         this.onNextAction(true);
     }
 
@@ -292,7 +297,7 @@ class Game {
                 break;
         }
         player.onPutCard(cardNo);
-        this.onGameRecord(3, nickname, targetNickname, null);
+        this.onGameRecord(3, nickname, targetNickname, null, null);
         this.onNextAction(true);
     }
 
@@ -324,7 +329,7 @@ class Game {
                 break;
         }
         player.onPutCard(cardNo);
-        this.onGameRecord(4, nickname, targetNickname, null);
+        this.onGameRecord(4, nickname, targetNickname, null, null);
         this.onNextAction(true);
     }
 
@@ -342,11 +347,12 @@ class Game {
         }
 
         if (this.map[collapseKey]) {
+            let collapseRoad = this.map[collapseKey];
             delete this.map[collapseKey];
             player.onPutCard(cardNo);
             this.possibleRoads = this.onSearchPossibleRoad('0_2', ['0_2'], {});
             this.onBroadcastCollapseRoad(collapseKey);
-            this.onGameRecord(1, nickname, null, collapseKey);
+            this.onGameRecord(1, nickname, null, collapseKey, collapseRoad);
             this.onNextAction(true);
         }
     }
@@ -367,7 +373,7 @@ class Game {
         let watchCard = this.map[watchKey];
         player.onWatchCard(watchKey, watchCard);
         player.onPutCard(cardNo);
-        this.onGameRecord(2, nickname, null, watchKey);
+        this.onGameRecord(2, nickname, null, watchKey, null);
         this.onNextAction(true);
     }
 
@@ -384,7 +390,7 @@ class Game {
         }
 
         player.onPutCard(cardNo);
-        this.onGameRecord(5, nickname, null, null);
+        this.onGameRecord(5, nickname, null, null, null);
         this.onNextAction(true);
     }
 
@@ -406,7 +412,9 @@ class Game {
      */
     onNextAction(isAction) {
         let prePlayer = this.players[this.actionList[this.actionIndex]];
-        prePlayer.unAction();
+        if (prePlayer) {
+            prePlayer.unAction();
+        }
 
         let gameFinishStatus = this.onCheckGameFinish();
         if (gameFinishStatus !== 0) {
@@ -416,7 +424,9 @@ class Game {
 
         if (isAction) {
             if (this.remainCards.length > 0) {
-                this.onTakeCard(prePlayer.nickname);
+                if (prePlayer) {
+                    this.onTakeCard(prePlayer.nickname);
+                }
             }
         }
 
@@ -437,9 +447,10 @@ class Game {
      * @param {string} action
      * @param {string} targer
      * @param {string} key
+     * @param {Card} road
      * @memberof Game
      */
-    onGameRecord(type, action, targer, key) {
+    onGameRecord(type, action, targer, key, road) {
         //// type:(0, dig)、(1, collapse)、(2, watch)、(3, fix)、(4, atk)、(5, give up)
         let col = key ? parseInt(key.split('_')[0]) : null;
         let row = key ? parseInt(key.split('_')[1]) : null;
@@ -466,7 +477,7 @@ class Game {
 
         for (let nickname in this.players) {
             let player = this.players[nickname];
-            player.onReceiveGameRecord(type, action, targer, key);
+            player.onReceiveGameRecord(type, action, targer, key, road);
         }
     }
 
@@ -497,7 +508,14 @@ class Game {
             this.clients.splice(index, 1);
             client.onLeaveGame(this.id);
             if (!this.isFinishGame) {
-                if (this.clients.length >= Game.MIN_OF_GAME_PLAYER) {
+                let hasReallyClient = false;
+                for (let client of this.clients) {
+                    if (!client.isRobot) {
+                        hasReallyClient = true;
+                    }
+                }
+
+                if (hasReallyClient && this.clients.length >= Game.MIN_OF_GAME_PLAYER) {
                     let nickname = client.nickname;
                     let player = this.players[nickname];
                     //// 放置離開玩家的手牌
@@ -537,16 +555,45 @@ class Game {
     }
 
     /**
+     * 加入觀看遊戲
+     * @param {Client} client
+     * @returns int
+     * @memberof Game
+     */
+    onJoinWatchGame(client) {
+        if (!this.id) {
+            client.onJoinWatchGameError(-1);
+            return;
+        }
+
+        if (this.watchClients.indexOf(client) !== -1) {
+            client.onJoinWatchGameError(-2);
+            return;
+        }
+
+        this.watchClients.push(client);
+        let action = this.actionList[this.actionIndex];
+        client.onJoinWatchGame(this.room.id, this.id, this.getGameInfo(client.nickname), action);
+    }
+
+    /**
+     * 離開觀看遊戲
+     * @param {Client} client
+     * @memberof Game
+     */
+    onLeaveWatchGame(client) {
+        let index = this.watchClients.indexOf(client);
+        if (index !== -1) {
+            this.watchClients.splice(index, 1);
+            client.onLeaveWatchGame(this.id);
+        }
+    }
+
+    /**
      * 撤銷遊戲
      * @memberof Game
      */
     onDestroy() {
-        this.server = null;
-        this.room = null;
-        this.id = null;
-        this.clients = null;
-        this.map = null;
-        this.possibleRoads = null;
         if (this.players) {
             for (let nickname in this.players) {
                 let player = this.players[nickname];
@@ -555,6 +602,21 @@ class Game {
             this.players = null;
         }
 
+        if (this.watchClients) {
+            this.onBroadcastGameResult(-1);
+            for (let watchClient of this.watchClients) {
+                watchClient.onLeaveWatchGame(this.id);
+            }
+
+            this.watchClients = null;
+        }
+
+        this.server = null;
+        this.room = null;
+        this.id = null;
+        this.clients = null;
+        this.map = null;
+        this.possibleRoads = null;
         this.actionList = null;
         this.actionIndex = null;
         this.remainCards = null;
@@ -758,8 +820,8 @@ class Game {
                 return 0;
             }
             //// check client card
-            for (let key in this.players) {
-                let player = this.players[key];
+            for (let nickname in this.players) {
+                let player = this.players[nickname];
                 if (player.cards.length > 0) {
                     return 0;
                 }
@@ -773,6 +835,7 @@ class Game {
      * 檢查是否連接到金礦
      * @param {string} key
      * @param {array} keyList
+     * @returns bool
      * @memberof Game
      */
     isMatchGoldRoad(key, keyList) {
@@ -843,8 +906,6 @@ class Game {
             arr[randomIndex] = element;
             arr[i] = randomElement;
         }
-
-        return arr;
     }
     //#endregion
 
@@ -869,6 +930,7 @@ class Game {
                     break;
             }
         }
+
         this.server.to(this.id).emit('response', JSON.stringify(['finishGame', [result, {
             goodManTeam: goodManTeam,
             badManTeam: badManTeam
@@ -884,6 +946,11 @@ class Game {
             let player = this.players[nickname];
             let gameInfo = this.getGameInfo(nickname);
             player.onUpdateGameInfo(gameInfo);
+        }
+
+        let watchGameInfo = this.getGameInfo('GetWatchGameIfo');
+        for (let watchClient of this.watchClients) {
+            watchClient.onUpdateGameInfo(watchGameInfo);
         }
     }
 
@@ -998,6 +1065,7 @@ class Game {
      * 最低遊戲人數
      * @readonly
      * @static
+     * @returns int
      * @memberof Game
      */
     static get MIN_OF_GAME_PLAYER() {

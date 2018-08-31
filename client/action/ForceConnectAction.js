@@ -5,7 +5,7 @@ class ForceConnectAction extends Action {
      * @memberof ForceConnectAction
      */
     action(data) {
-        new MessageAction().action(MessageType.SYS_FORCE_DISCONNECTED);
+        new MessageAction().action([MessageType.SYS_FORCE_DISCONNECTED]);
         Socket.getInstance().onClose();
         this.do(ActionType.GAME_INIT);
     }

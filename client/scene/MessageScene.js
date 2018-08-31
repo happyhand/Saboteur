@@ -2,7 +2,9 @@ class MessageScene extends BaseScene {
     constructor() {
         super('MessageScene');
         this.txt = null;
-        this.messageButton = null;
+        this.messageOkButton = null;
+        this.messageCancelButton = null;
+        this.messageWatchButton = null;
     }
 
     /**
@@ -11,7 +13,9 @@ class MessageScene extends BaseScene {
      */
     preload() {
         this.load.image('messageFrame', 'assets/message/MessageFrame.png');
-        this.load.image('messageButton', 'assets/message/MessageButton.png');
+        this.load.image('messageOkButton', 'assets/message/MessageOkButton.png');
+        this.load.image('messageCancelButton', 'assets/message/MessageCancelButton.png');
+        this.load.image('messageWatchButton', 'assets/message/MessageWatchButton.png');
     }
 
     /**
@@ -19,6 +23,7 @@ class MessageScene extends BaseScene {
      * @memberof MessageScene
      */
     create() {
+        let self = this;
         //// create messageFrame
         this.add.image(525, 345, 'messageFrame');
         //// create messgae txt
@@ -28,11 +33,23 @@ class MessageScene extends BaseScene {
             color: '#ffffff',
             align: 'center'
         });
-        //// create messgae button
-        let self = this;
-        this.messageButton = this.add.image(525, 452, 'messageButton').setInteractive();
-        this.messageButton.on('pointerup', function (pointer) {
-            self.onConfirmMessage();
+        //// create messgae ok button
+        this.messageOkButton = this.add.image(525, 452, 'messageOkButton').setInteractive();
+        this.messageOkButton.on('pointerup', function (pointer) {
+            self.onCloseMessage();
+        });
+         //// create messgae cancel button
+         this.messageCancelButton = this.add.image(600, 452, 'messageCancelButton').setInteractive();
+         this.messageCancelButton.on('pointerup', function (pointer) {
+             self.onCloseMessage();
+         });
+          //// create messgae watch button
+        this.messageWatchButton = this.add.image(450, 452, 'messageWatchButton').setInteractive();
+        this.messageWatchButton.on('pointerup', function (pointer) {
+            let watchRoomID = this.roomID;
+            this.roomID = '';
+            self.onCloseMessage();
+            new JoinWatchGameAction().action(watchRoomID);
         });
 
         super.create();
@@ -58,10 +75,11 @@ class MessageScene extends BaseScene {
 
     /**
      * 執行訊息命令
-     * @param {string} type
+     * @param {array} data
      * @memberof MessageScene
      */
-    onReceiveMessage(type) {
+    onReceiveMessage(data) {
+        let type = data[0];
         switch (type) {
             case MessageType.SYS_LOGIN_FAIL:
                 this.onShowMessagee([470, 300], 'Login Fail.', true);
@@ -91,7 +109,8 @@ class MessageScene extends BaseScene {
                 this.onShowMessagee([400, 300], 'The client already join.', true);
                 break;
             case MessageType.SYS_THE_GAME_IS_RUNNING:
-                this.onShowMessagee([415, 300], 'The game is running.', true);
+                this.messageWatchButton.roomID = data[1];
+                this.onShowMessagee([355, 270], 'The game is running.\n\nDo you want to watch the game?', false, true, true);
                 break;
             case MessageType.SYS_LEAVE_ROOM_KICKED:
                 this.onShowMessagee([385, 300], 'You are kick out the room.', true);
@@ -110,6 +129,12 @@ class MessageScene extends BaseScene {
                 break;
             case MessageType.SYS_RE_GAME_ERROR:
                 this.onShowMessagee([420, 300], 'Can not rejoin room.', true);
+                break;
+            case MessageType.SYS_GAME_NOT_EXIST:
+                this.onShowMessagee([400, 300], 'The game does not exist.', true);
+                break;
+            case MessageType.SYS_CLIENT_ALREADY_WATCH:
+                this.onShowMessagee([400, 300], 'The client already join.', true);
                 break;
             case MessageType.SYS_FORCE_DISCONNECTED:
                 this.onShowMessagee([400, 300], 'Server refused connect.', true);
@@ -130,17 +155,19 @@ class MessageScene extends BaseScene {
      * @param {bool} isConfirm
      * @memberof MessageScene
      */
-    onShowMessagee(position, message, isConfirm) {
+    onShowMessagee(position, message, showOk, showCancel, showWatch) {
         this.txt.setPosition(position[0], position[1]);
         this.txt.setText(message);
-        this.messageButton.visible = isConfirm;
+        this.messageOkButton.visible = showOk;
+        this.messageCancelButton.visible = showCancel;
+        this.messageWatchButton.visible = showWatch;
     }
 
     /**
-     * 執行訊息確認
+     * 執行關閉訊息
      * @memberof MessageScene
      */
-    onConfirmMessage() {
-        new MessageAction().action(MessageType.NONE);
+    onCloseMessage() {
+        new MessageAction().action([MessageType.NONE]);
     }
 }

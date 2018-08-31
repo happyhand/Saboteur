@@ -18,6 +18,7 @@ class MainPlayerInfo extends PlayerInfo {
         this.fixMark = null;
         this.cards = null;
         this.appointMark = null;
+        this.cardDisables = null;
         this.transformButtons = null;
         this.actionAnims = null;
     }
@@ -189,6 +190,7 @@ class MainPlayerInfo extends PlayerInfo {
     onCreateCards() {
         let self = this;
         this.cards = [];
+        this.cardDisables = [];
         this.transformButtons = [];
         for (let i = 0; i < 6; i++) {
             //// create card
@@ -197,6 +199,9 @@ class MainPlayerInfo extends PlayerInfo {
                 self.onAppointCard(i);
             });
             this.cards.push(card);
+            //// create card disable
+            let cardDisable = this.scene.add.sprite(403 + i * 95, 727.5, 'gameCardDisable');
+            this.cardDisables.push(cardDisable);
             //// transform button
             let transformButton = this.scene.add.image(435.5 + i * 95, 677.5, 'gameTransformButton').setInteractive();
             transformButton.on('pointerup', function (pointer) {
@@ -302,6 +307,8 @@ class MainPlayerInfo extends PlayerInfo {
             card.input.enabled = true;
         }
 
+        this.onHandleHandCard();
+
         super.onAction();
     }
 
@@ -326,6 +333,10 @@ class MainPlayerInfo extends PlayerInfo {
         //// update card
         for (let card of this.cards) {
             card.input.enabled = false;
+        }
+        //// update card disable
+        for (let cardDisable of this.cardDisables) {
+            cardDisable.visible = false;
         }
         //// update appointMark
         this.appointMark.index = -1;
@@ -505,15 +516,7 @@ class MainPlayerInfo extends PlayerInfo {
      * @memberof MainPlayerInfo
      */
     onHandleMapActionCard(actionType, cardIndex) {
-        let isLock = false;
-        for (let i = 0; i < 3; i++) {
-            let lock = this.locks[i];
-            if (lock.frame.name === i) {
-                isLock = true;
-                break;
-            }
-        }
-
+        let isLock = this.isLock();
         let appointCardData = this.cardDatas[cardIndex];
         let type = appointCardData.type;
         let isReverse = appointCardData.isReverse;
@@ -578,14 +581,17 @@ class MainPlayerInfo extends PlayerInfo {
      * @memberof MainPlayerInfo
      */
     onHandleHandCard() {
+        let isLock = this.isLock();
         for (let i = 0; i < 6; i++) {
-            let card = this.cards[i];
             let cardData = this.cardDatas[i];
+            let card = this.cards[i];
+            let cardDisable = this.cardDisables[i];
             let transformButton = this.transformButtons[i];
             if (cardData) {
                 card.setFrame(cardData.typeIndex);
                 card.angle = cardData.isReverse ? 180 : 0;
                 card.visible = true;
+                cardDisable.visible = cardData.cardType <= 1 ? isLock : false;
                 transformButton.visible = cardData.cardType <= 1;
             } else {
                 card.visible = false;

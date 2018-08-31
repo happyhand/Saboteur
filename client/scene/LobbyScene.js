@@ -31,7 +31,6 @@ class LobbyScene extends BaseScene {
             frameWidth: 105,
             frameHeight: 54
         });
-        this.load.audio('idle', 'assets/sound/Idle.mp3');
     }
 
     /**
@@ -53,8 +52,6 @@ class LobbyScene extends BaseScene {
         //// create message background
         this.messageBackground = this.add.image(525, 400, 'lobbyMessageBackground').setInteractive();
         this.messageBackground.visible = false;
-        //// create sound
-        SoundService.getInstance().onRegister('idle', this.sound.add('idle'));
 
         super.create();
     }
@@ -97,8 +94,11 @@ class LobbyScene extends BaseScene {
             case ActionType.JOIN_GAME:
                 this.onSleep();
                 break;
+            case ActionType.JOIN_WATCH_GAME:
+                this.onSleep();
+                break;
             case ActionType.SYSTEM_MESSAGE:
-                this.messageBackground.visible = data !== MessageType.NONE;
+                this.messageBackground.visible = data[0] !== MessageType.NONE;
                 break;
         }
     }
@@ -180,7 +180,7 @@ class LobbyScene extends BaseScene {
             this.onSwitchActionButton(false);
             new CreateRoomAction().action([roomName, countdownTime]);
         } else {
-            new MessageAction().action(MessageType.SYS_MISS_ROOM_NAME);
+            new MessageAction().action([MessageType.SYS_MISS_ROOM_NAME]);
         }
     }
 }

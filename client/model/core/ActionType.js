@@ -249,4 +249,14 @@ class ActionType {
     static get GAME_CHAT() {
         return "GAME_CHAT";
     }
+
+    /**
+     * 客端加入觀看遊戲
+     * @readonly
+     * @static
+     * @memberof ActionType
+     */
+    static get JOIN_WATCH_GAME() {
+        return "JOIN_WATCH_GAME";
+    }
 }

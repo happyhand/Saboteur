@@ -167,19 +167,21 @@ class Player {
     }
 
     /**
-     * 接收遊戲訊息 (Robot 用)
+     * 接收遊戲訊息 (Robot 用來判斷友善值)
+     * @param {object} map
      * @param {int} type
      * @param {string} action
      * @param {string} targer
      * @param {string} key
      * @memberof RobotPlayer
      */
-    onReceiveGameRecord(type, action, targer, key) {
+    onReceiveGameRecord(map, type, action, targer, key) {
         //// not work
     }
 
     /**
      * 玩家是否可以挖掘礦道
+     * @returns bool
      * @memberof Player
      */
     canDig() {

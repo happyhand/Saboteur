@@ -20,22 +20,22 @@ class Room {
      */
     onJoin(client) {
         if (this.clients.length >= MAX_OF_CLIENT) {
-            client.onJoinRoomError(-3);
+            client.onJoinRoomError(-3, this.id);
             return;
         }
 
         if (this.clients.indexOf(client) !== -1) {
-            client.onJoinRoomError(-4);
+            client.onJoinRoomError(-4, this.id);
             return;
         }
 
         if (this.hasRepeatNickname(client.nickname)) {
-            client.onJoinRoomError(-4);
+            client.onJoinRoomError(-4, this.id);
             return;
         }
 
         if (this.game && !this.game.isFinishGame) {
-            client.onJoinRoomError(-5);
+            client.onJoinRoomError(-5, this.id);
             return;
         }
 
@@ -51,7 +51,7 @@ class Room {
      */
     onReJoin(client) {
         if (this.clients.indexOf(client) === -1) {
-            client.onJoinRoomError(-6);
+            client.onJoinRoomError(-6, this.id);
             client.doLeaveRoom();
             return;
         }
@@ -158,7 +158,14 @@ class Room {
      */
     onGameFinish() {
         for (let client of this.clients) {
-            client.isReadyGame = false;
+            if(!client.isRobot)
+            {
+                client.isReadyGame = false;
+            }
+            else
+            {
+                client.doReGame();
+            }
         }
 
         this.onBroadcastCurrentRoomInfo();

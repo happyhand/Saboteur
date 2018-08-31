@@ -16,7 +16,7 @@ class AddRobotAction extends Action {
     response(data) {
         switch (data) {
             case -1:
-                new MessageAction().action(MessageType.SYS_ADD_ROBOT_FAIL);
+                new MessageAction().action([MessageType.SYS_ADD_ROBOT_FAIL]);
                 break;
         }
     }

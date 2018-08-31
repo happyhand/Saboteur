@@ -80,29 +80,10 @@ class LoadScene extends BaseScene {
             case ActionType.JOIN_LOBBY:
             case ActionType.JOIN_ROOM:
             case ActionType.JOIN_GAME:
+            case ActionType.JOIN_WATCH_GAME:
                 this.isResponse = true;
                 this.onCheckLoadComplete();
                 break;
-        }
-    }
-
-    /**
-     * 喚醒場景
-     * @memberof FrontCoverScene
-     */
-    onWake() {
-        if (!super.onWake()) {
-            return;
-        }
-    }
-
-    /**
-     * 休眠場景
-     * @memberof FrontCoverScene
-     */
-    onSleep() {
-        if (!super.onSleep()) {
-            return;
         }
     }
 

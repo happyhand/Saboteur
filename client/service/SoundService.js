@@ -10,37 +10,58 @@ class SoundService {
         return Class[SOUND_SERVICE_INSTANCE];
     }
 
+    /**
+     * 註冊音效
+     * @param {string} key
+     * @param {Sound} sound
+     * @memberof SoundService
+     */
     onRegister(key, sound) {
-        this.sounds[key] = sound;
+        if(!this.sounds[key])
+        {
+            this.sounds[key] = sound;
+        }
     }
 
+    /**
+     * 播放音效
+     * @param {string} key
+     * @param {bool} isLoop
+     * @param {function} completeCallBack
+     * @memberof SoundService
+     */
     onPlay(key, isLoop, completeCallBack) {
         let sound = this.sounds[key];
-        if(sound)
-        {
+        if (sound) {
             sound.play();
             sound.loop = isLoop;
-            if(completeCallBack)
-            {
+            if (completeCallBack) {
                 sound.on('ended', completeCallBack);
             }
         }
     }
 
-    onStop(key)
-    {
+    /**
+     * 停止音效
+     * @param {string} key
+     * @memberof SoundService
+     */
+    onStop(key) {
         let sound = this.sounds[key];
-        if(sound)
-        {
+        if (sound) {
             sound.stop();
         }
     }
 
-    isPlaying(key)
-    {
+    /**
+     * 檢查是否播放音效
+     * @param {string} key
+     * @returns bool
+     * @memberof SoundService
+     */
+    isPlaying(key) {
         let sound = this.sounds[key];
-        if(sound)
-        {
+        if (sound) {
             return sound.isPlaying;
         }
 
@@ -48,9 +69,21 @@ class SoundService {
     }
 
     /**
+     * 調整音量
+     * @param {number} value
+     * @memberof SoundService
+     */
+    onHandleVolume(value) {
+        for (let key in this.sounds) {
+            let sound = this.sounds[key];
+            sound.volume = value;
+        }
+    }
+
+    /**
      * 音效總管單例
      * @static
-     * @returns
+     * @returns SoundService
      * @memberof SoundService
      */
     static getInstance() {

@@ -35,6 +35,66 @@ class Robot {
     }
 
     /**
+     * 請求放置礦道牌
+     * @param {string} digKey
+     * @param {string} digType
+     * @param {bool} isReverse
+     * @param {bool} cardNo
+     * @memberof Client
+     */
+    doDigCard(digKey, digType, isReverse, cardNo) {
+        let room = this.lobby.getRoom(this.roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onDigCard(this.nickname, digKey, digType, isReverse, cardNo);
+    }
+
+    /**
+     * 請求放置修復牌
+     * @param {string} targetNickname
+     * @param {string} fixType
+     * @param {bool} cardNo
+     * @memberof Client
+     */
+    doFixCard(targetNickname, fixType, cardNo) {
+        let room = this.lobby.getRoom(this.roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onFixCard(this.nickname, targetNickname, fixType, cardNo);
+    }
+
+    /**
+     * 請求放置破壞牌
+     * @param {string} targetNickname
+     * @param {string} atkType
+     * @param {bool} cardNo
+     * @memberof Client
+     */
+    doAtkCard(targetNickname, atkType, cardNo) {
+        let room = this.lobby.getRoom(this.roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onAtkCard(this.nickname, targetNickname, atkType, cardNo);
+    }
+
+    /**
+     * 請求放置崩塌牌
+     * @param {string} collapseKey
+     * @param {bool} cardNo
+     * @memberof Client
+     */
+    doCollapseCard(collapseKey, cardNo) {
+        let room = this.lobby.getRoom(this.roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onCollapseCard(this.nickname, collapseKey, cardNo);
+    }
+
+    /**
      * 請求放置觀看牌
      * @param {string} watchKey
      * @param {bool} cardNo
@@ -59,6 +119,19 @@ class Robot {
         let game = room.getGame();
         if (!game) return;
         game.onGiveUpCard(this.nickname, cardNo);
+    }
+
+    /**
+     * 請求重新加入房間遊戲
+     * @memberof Client
+     */
+    doReGame() {
+        let room = this.lobby.getRoom(this.roomID);
+        if (!room) return;
+        let game = room.getGame();
+        if (!game) return;
+        game.onLeave(this);
+        room.onReJoin(this);
     }
 
     //#endregion

@@ -178,6 +178,22 @@ class Socket {
     }
 
     /**
+     * 請求加入觀看遊戲
+     * @memberof Socket
+     */
+    requestJoinWatchGame(data) {
+        this.onSendRequest('joinWatchGame', data);
+    }
+
+    /**
+     * 請求離開觀看遊戲
+     * @memberof Socket
+     */
+    requestLeaveWatchGame(data) {
+        this.onSendRequest('leaveWatchGame', data);
+    }
+
+    /**
      * Server 回覆 \ 通知
      * @param {jsonString} dataJSON
      * @memberof Socket
@@ -219,6 +235,9 @@ class Socket {
                 break;
             case 'joinGame':
                 new JoinGameAction().response(data[1]);
+                break;
+            case 'joinWatchGame':
+                new JoinWatchGameAction().response(data[1]);
                 break;
             case 'updateGameInfo':
                 new UpdateGameInfoAction().response(data[1]);

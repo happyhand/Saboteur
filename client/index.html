@@ -17,10 +17,12 @@
     <script src='scene/BaseScene.js'></script>
     <script src='scene/MessageScene.js'></script>
     <script src='scene/LoadScene.js'></script>
+    <script src='scene/SoundScene.js'></script>
     <script src='scene/FrontCoverScene.js'></script>
     <script src='scene/LobbyScene.js'></script>
     <script src='scene/RoomScene.js'></script>
     <script src='scene/GameScene.js'></script>
+    <script src='scene/WatchGameScene.js'></script>
     <!-- module -->
     <script src='scene/module/BaseModule.js'></script>
     <script src='scene/module/lobby/RoomInfo.js'></script>
@@ -33,7 +35,11 @@
     <script src='scene/module/game/OtherPlayerInfo.js'></script>
     <script src='scene/module/game/WatchCardAnims.js'></script>
     <script src='scene/module/game/GameFinishAnims.js'></script>
+    <script src='scene/module/game/GameDescription.js'></script>
     <script src='scene/module/game/main/ActionAnims.js'></script>
+    <script src='scene/module/watchgame/WatchPlayerInfo.js'></script>
+    <script src='scene/module/watchgame/WatchGameLog.js'></script>
+    <script src='scene/module/watchgame/WatchGameFinishAnims.js'></script>
     <!-- action -->
     <script src='action/Action.js'></script>
     <script src='action/InitGameAction.js'></script>
@@ -63,6 +69,8 @@
     <script src='action/FinishGameAction.js'></script>
     <script src='action/ReGameAction.js'></script>
     <script src='action/GameChatAction.js'></script>
+    <script src='action/JoinWatchGameAction.js'></script>
+    <script src='action/LeaveWatchGameAction.js'></script>
     <script src='action/ForceConnectAction.js'></script>
     <!-- service -->
     <script src='service/SoundService.js'></script>
@@ -71,6 +79,15 @@
     <script src='Main.js'></script>
     <!-- css -->
     <style>
+        html, body{
+            overflow: auto;
+        }
+
+        .gameContent{
+            position: absolute;
+            transform-origin:0 0;
+        }
+
         .baseInput {
             position: absolute;
             background-color: transparent;
@@ -109,14 +126,14 @@
             width: 195px;
         }
 
-        .hiddenInput{
+        .hiddenInput {
             left: -1000px;
         }
     </style>
 </head>
 
 <body style="margin: 0px;" onresize="onResize()">
-    <div id="gameContent" style="position: absolute;">
+    <div id="gameContent" class="gameContent">
         <input id="nameInput" placeholder="Enter Your Name" type="text" class="baseInput nameInput">
         <input id="roomInput" placeholder="Enter Name" type="text" class="baseInput roomInput">
         <input id="roomChatInput" placeholder="Enter Your Message" type="text" class="baseInput roomChatInput">

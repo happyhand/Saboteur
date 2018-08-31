@@ -56,10 +56,6 @@ class RoomScene extends BaseScene {
             frameWidth: 45,
             frameHeight: 45
         });
-        this.load.audio('joinRoom', 'assets/sound/JoinRoom.mp3');
-        this.load.audio('gameCountDown', 'assets/sound/GameCountDown.mp3');
-        this.load.audio('onReady', 'assets/sound/OnReady.mp3');
-        this.load.audio('unReady', 'assets/sound/UnReady.mp3');
     }
 
     /**
@@ -89,11 +85,6 @@ class RoomScene extends BaseScene {
         //// create message background
         this.messageBackground = this.add.image(525, 400, 'roomMessageBackground').setInteractive();
         this.messageBackground.visible = false;
-        //// create sound
-        SoundService.getInstance().onRegister('joinRoom', this.sound.add('joinRoom'));
-        SoundService.getInstance().onRegister('gameCountDown', this.sound.add('gameCountDown'));
-        SoundService.getInstance().onRegister('onReady', this.sound.add('onReady'));
-        SoundService.getInstance().onRegister('unReady', this.sound.add('unReady'));
 
         super.create();
     }
@@ -139,8 +130,11 @@ class RoomScene extends BaseScene {
                 this.roomChat.onDisable(false);
                 this.onSleep();
                 break;
+            case ActionType.JOIN_WATCH_GAME:
+                this.onSleep();
+                break;
             case ActionType.SYSTEM_MESSAGE:
-                this.messageBackground.visible = data !== MessageType.NONE;
+                this.messageBackground.visible = data[0] !== MessageType.NONE;
                 break;
         }
     }
@@ -331,7 +325,7 @@ class RoomScene extends BaseScene {
             }
 
             this.goButton.value = true;
-            this.robotButton.visible = false;
+            this.robotButton.visible = true;
         } else {
             this.goButton.input.enabled = false;
             this.goButton.value = false;

@@ -149,7 +149,7 @@ class GameFinishAnims extends BaseModule {
 
         this.exitButton = this.scene.add.image(645.5, 732.5, 'gameFinishExitButton').setInteractive();
         this.exitButton.on('pointerup', function () {
-            self.scene.onRequestExitGame(false);
+            self.scene.onRequestExitGame();
         });
     }
 

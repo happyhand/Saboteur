@@ -8,7 +8,7 @@ class PutCardAction extends Action {
         let type = data[0];
         switch (type) {
             case -1:
-                new MessageAction().action(MessageType.SYS_NOT_APPOINT_PUT_CARD);
+                new MessageAction().action([MessageType.SYS_NOT_APPOINT_PUT_CARD]);
                 break;
             case 0:
                 Socket.getInstance().requestGiveUpCard(data[1]);
