@@ -32,7 +32,7 @@ class WatchGameFinishAnims extends BaseModule {
      * @memberof WatchGameFinishAnims
      */
     onCreateBackground() {
-        this.background = this.scene.add.image(525, 400, 'watchGameFinishBackground').setInteractive(); //// 設定 interactive，防止底下 Game 元件 MouseEvent 觸發
+        this.background = this.scene.add.image(525, 400, 'gameFinishBackground').setInteractive(); //// 設定 interactive，防止底下 Game 元件 MouseEvent 觸發
     }
 
     /**
@@ -40,8 +40,8 @@ class WatchGameFinishAnims extends BaseModule {
      * @memberof WatchGameFinishAnims
      */
     onCreateMark() {
-        this.goodManMark = this.scene.add.image(525, 190, 'watchGameGoodManWinMark');
-        this.badManMark = this.scene.add.image(525, 190, 'watchGameBadManWinMark');
+        this.goodManMark = this.scene.add.image(525, 190, 'gameGoodManWinMark');
+        this.badManMark = this.scene.add.image(525, 190, 'gameBadManWinMark');
     }
 
     /**
@@ -51,7 +51,7 @@ class WatchGameFinishAnims extends BaseModule {
     onCreateAnims() {
         this.scene.anims.create({
             key: 'WatchGameGoodManWinAnims_1',
-            frames: this.scene.anims.generateFrameNumbers('watchGameGoodManWinAnims', {
+            frames: this.scene.anims.generateFrameNumbers('gameGoodManWinAnims', {
                 start: 0,
                 end: 5
             }),
@@ -61,7 +61,7 @@ class WatchGameFinishAnims extends BaseModule {
 
         this.scene.anims.create({
             key: 'WatchGameGoodManWinAnims_2',
-            frames: this.scene.anims.generateFrameNumbers('watchGameGoodManWinAnims', {
+            frames: this.scene.anims.generateFrameNumbers('gameGoodManWinAnims', {
                 start: 6,
                 end: 7
             }),
@@ -71,7 +71,7 @@ class WatchGameFinishAnims extends BaseModule {
 
         this.scene.anims.create({
             key: 'WatchGameBadManWinAnims_1',
-            frames: this.scene.anims.generateFrameNumbers('watchGameBadManWinAnims', {
+            frames: this.scene.anims.generateFrameNumbers('gameBadManWinAnims', {
                 start: 0,
                 end: 5
             }),
@@ -81,7 +81,7 @@ class WatchGameFinishAnims extends BaseModule {
 
         this.scene.anims.create({
             key: 'WatchGameBadManWinAnims_2',
-            frames: this.scene.anims.generateFrameNumbers('watchGameBadManWinAnims', {
+            frames: this.scene.anims.generateFrameNumbers('gameBadManWinAnims', {
                 start: 6,
                 end: 8
             }),
@@ -90,7 +90,7 @@ class WatchGameFinishAnims extends BaseModule {
 
         this.scene.anims.create({
             key: 'WatchGameBadManWinAnims_3',
-            frames: this.scene.anims.generateFrameNumbers('watchGameBadManWinAnims', {
+            frames: this.scene.anims.generateFrameNumbers('gameBadManWinAnims', {
                 start: 8,
                 end: 9
             }),
@@ -98,8 +98,8 @@ class WatchGameFinishAnims extends BaseModule {
             repeat: -1
         });
 
-        this.goodManAnims = this.scene.add.sprite(525, 475, 'watchGameGoodManWinAnims');
-        this.badManAnims = this.scene.add.sprite(525, 475, 'watchGameBadManWinAnims');
+        this.goodManAnims = this.scene.add.sprite(525, 475, 'gameGoodManWinAnims');
+        this.badManAnims = this.scene.add.sprite(525, 475, 'gameBadManWinAnims');
     }
 
     /**
@@ -107,7 +107,7 @@ class WatchGameFinishAnims extends BaseModule {
      * @memberof WatchGameFinishAnims
      */
     onCreateInfoFrame() {
-        this.infoFrame = this.scene.add.image(528, 495.5, 'watchGameFinishInfoFrame');
+        this.infoFrame = this.scene.add.image(528, 495.5, 'gameFinishInfoFrame');
     }
 
     /**
@@ -141,7 +141,7 @@ class WatchGameFinishAnims extends BaseModule {
      */
     onCreateButton() {
         let self = this;
-        this.exitButton = this.scene.add.image(525, 732.5, 'watchGameFinishExitButton').setInteractive();
+        this.exitButton = this.scene.add.image(525, 732.5, 'gameFinishExitButton').setInteractive();
         this.exitButton.on('pointerup', function () {
             self.scene.onRequestExitGame();
         });

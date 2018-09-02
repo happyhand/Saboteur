@@ -5,6 +5,7 @@ class SoundService {
         if (!Class[SOUND_SERVICE_INSTANCE]) {
             Class[SOUND_SERVICE_INSTANCE] = this;
             this.sounds = {};
+            this.volume = 0.2;
         }
 
         return Class[SOUND_SERVICE_INSTANCE];
@@ -19,6 +20,7 @@ class SoundService {
     onRegister(key, sound) {
         if(!this.sounds[key])
         {
+            sound.volume = this.volume;
             this.sounds[key] = sound;
         }
     }
@@ -74,10 +76,21 @@ class SoundService {
      * @memberof SoundService
      */
     onHandleVolume(value) {
+        this.volume = value;
         for (let key in this.sounds) {
             let sound = this.sounds[key];
             sound.volume = value;
         }
+    }
+
+    /**
+     * 取得當前音量
+     * @returns number
+     * @memberof SoundService
+     */
+    getCurrentVolume()
+    {
+        return this.volume;
     }
 
     /**

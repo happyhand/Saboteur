@@ -5,12 +5,9 @@ const GAME = new Phaser.Game({
     parent: 'Saboteur',
     width: BASE_GAME_WIDTH,
     height: BASE_GAME_HEIGHT,
-    scene: {
-        preload: onPreLoadSound,
-        create: onStart
-    },
     callbacks: {
-        postBoot: onInit
+        preBoot: onInit,
+        postBoot: onStart
     }
 });
 
@@ -26,28 +23,6 @@ function onInit() {
 }
 
 /**
- * 預先載入音效資源
- */
-function onPreLoadSound() {
-    //// fronetcover sound
-    this.load.audio('frontcover', 'assets/sound/Frontcover.mp3');
-    this.load.audio('loginClick', 'assets/sound/LoginClick.mp3');
-    //// lobby sound
-    this.load.audio('idle', 'assets/sound/Idle.mp3');
-    //// room sound
-    this.load.audio('joinRoom', 'assets/sound/JoinRoom.mp3');
-    this.load.audio('gameCountDown', 'assets/sound/GameCountDown.mp3');
-    this.load.audio('onReady', 'assets/sound/OnReady.mp3');
-    this.load.audio('unReady', 'assets/sound/UnReady.mp3');
-    //// game sound
-    this.load.audio('game', 'assets/sound/Game.mp3');
-    this.load.audio('actionCountDown', 'assets/sound/ActionCountDown.mp3');
-    this.load.audio('putCard', 'assets/sound/PutCard.mp3');
-    this.load.audio('goodManWin', 'assets/sound/GoodManWin.mp3');
-    this.load.audio('badManWin', 'assets/sound/BadManWin.mp3');
-}
-
-/**
  * 程式起始端
  */
 function onStart() {
@@ -56,40 +31,8 @@ function onStart() {
     gameContent.appendChild(GAME.canvas);
     //// Resize Game
     onResize();
-    //// create fronetcover sound
-    SoundService.getInstance().onRegister('frontcover', this.sound.add('frontcover'));
-    SoundService.getInstance().onRegister('loginClick', this.sound.add('loginClick'));
-    //// create lobby sound
-    SoundService.getInstance().onRegister('idle', this.sound.add('idle'));
-    //// create room sound
-    SoundService.getInstance().onRegister('joinRoom', this.sound.add('joinRoom'));
-    SoundService.getInstance().onRegister('gameCountDown', this.sound.add('gameCountDown'));
-    SoundService.getInstance().onRegister('onReady', this.sound.add('onReady'));
-    SoundService.getInstance().onRegister('unReady', this.sound.add('unReady'));
-    //// create game sound
-    SoundService.getInstance().onRegister('game', this.sound.add('game'));
-    SoundService.getInstance().onRegister('actionCountDown', this.sound.add('actionCountDown'));
-    SoundService.getInstance().onRegister('putCard', this.sound.add('putCard'));
-    SoundService.getInstance().onRegister('goodManWin', this.sound.add('goodManWin'));
-    SoundService.getInstance().onRegister('badManWin', this.sound.add('badManWin'));
     //// register scene
-    onRegisterScene();
-    //// init game
-    new InitGameAction().action();
-}
-
-/**
- * 註冊場景
- */
-function onRegisterScene() {
-    GAME.scene.add('FrontCoverScene', new FrontCoverScene());
-    GAME.scene.add('LobbyScene', new LobbyScene());
-    GAME.scene.add('RoomScene', new RoomScene());
-    GAME.scene.add('GameScene', new GameScene());
-    GAME.scene.add('WatchGameScene', new WatchGameScene());
-    GAME.scene.add('MessageScene', new MessageScene());
-    GAME.scene.add('SoundScene', new SoundScene());
-    GAME.scene.add('LoadScene', new LoadScene());
+    GAME.scene.add('InitGameScene', new InitGameScene(), true);
 }
 
 function onResize() {

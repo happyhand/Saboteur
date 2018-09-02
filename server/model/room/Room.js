@@ -114,8 +114,7 @@ class Room {
      * @memberof Room
      */
     onCreateGame(client) {
-        let isGameReady = this.isGameReady();
-        if (isGameReady) {
+        if (this.isGameReady()) {
             let service = require('../core/Service.js');
             let gameClass = require('../game/Game.js');
             let gameID = service.getRandomID();
@@ -136,19 +135,24 @@ class Room {
      * @memberof Room
      */
     onPrepareGame(room, index) {
-        if (room.game) {
-            if (room.clients) {
-                if (index === 0) {
-                    room.game.onStartGame();
-                } else {
-                    room.onBroadcastRoomChat(null, 'The game starts after ' + index + ' seconds.');
-                    setTimeout(room.onPrepareGame, 1000, room, --index);
+        try {
+            if (room.game) {
+                if (room.clients) {
+                    if (index === 0) {
+                        room.game.onStartGame();
+                    } else {
+                        room.onBroadcastRoomChat(null, 'The game starts after ' + index + ' seconds.');
+                        setTimeout(room.onPrepareGame, 1000, room, --index);
+                    }
+                }
+            } else {
+                if (room.clients) {
+                    room.onBroadcastRoomChat(null, 'The game has been closed.');
                 }
             }
-        } else {
-            if (room.clients) {
-                room.onBroadcastRoomChat(null, 'The game has been closed.');
-            }
+        } catch (error) {
+            room.onServerError(21, error);
+            room.onDestroy();
         }
     }
 
@@ -158,12 +162,9 @@ class Room {
      */
     onGameFinish() {
         for (let client of this.clients) {
-            if(!client.isRobot)
-            {
+            if (!client.isRobot) {
                 client.isReadyGame = false;
-            }
-            else
-            {
+            } else {
                 client.doReGame();
             }
         }
@@ -188,23 +189,39 @@ class Room {
      * @memberof Room
      */
     onDestroy() {
-        this.lobby.onDeleteRoom(this.id);
-        if (this.clients) {
-            for (let client of this.clients) {
-                if (client.isRobot) {
-                    client.onDestory();
+        try {
+            this.lobby.onDeleteRoom(this.id);
+            if (this.clients) {
+                for (let client of this.clients) {
+                    if (client.isRobot) {
+                        client.onDestory();
+                    }
                 }
+
+                this.clients = null;
             }
 
-            this.clients = null;
+            this.server = null;
+            this.lobby = null;
+            this.id = null;
+            this.roomName = null;
+            this.masterName = null;
+            this.game = null;
+        } catch (error) {
+            this.onServerError(22, error);
         }
+    }
 
-        this.server = null;
-        this.lobby = null;
-        this.id = null;
-        this.roomName = null;
-        this.masterName = null;
-        this.game = null;
+    /**
+     * 伺服器發生錯誤
+     * @memberof Room
+     */
+    onServerError(code, error) {
+        this.onBroadcastServerError(code);
+        console.log('\n====================== Server Error =========================');
+        console.log('Error Code ::', code);
+        console.log('Error Message ::', error.message);
+        console.log('Error Line ::', error.stack.split('\n')[1].trim());
     }
     //#endregion
 
@@ -235,6 +252,14 @@ class Room {
     onBroadcastCreateGame() {
         this.server.to(this.id).emit('response', JSON.stringify(['createGame', 1]));
     }
+
+    /**
+     * 廣播遊戲創建
+     * @memberof Room
+     */
+    onBroadcastServerError(code) {
+        this.server.to(this.id).emit('response', JSON.stringify(['serverError', code]));
+    }
     //#endregion
 
     //#region Set & Get
@@ -244,34 +269,34 @@ class Room {
      * @memberof Room
      */
     getRoomInfo() {
-        if (this.clients) {
-            let clientInfos = [];
-            for (let client of this.clients) {
-                let isMaster = client.nickname === this.masterName;
-                let data = {
-                    nickname: client.nickname,
-                    isMaster: isMaster,
-                    isReadyGame: client.isReadyGame
-                };
-                if (isMaster) {
-                    clientInfos.unshift(data);
-                } else {
-                    clientInfos.push(data);
+            if (this.clients) {
+                let clientInfos = [];
+                for (let client of this.clients) {
+                    let isMaster = client.nickname === this.masterName;
+                    let data = {
+                        nickname: client.nickname,
+                        isMaster: isMaster,
+                        isReadyGame: client.isReadyGame
+                    };
+                    if (isMaster) {
+                        clientInfos.unshift(data);
+                    } else {
+                        clientInfos.push(data);
+                    }
                 }
+    
+                return {
+                    id: this.id,
+                    name: this.roomName,
+                    countdown: this.countdown,
+                    master: this.masterName,
+                    isGameRunning: this.game !== undefined && this.game !== null && !this.game.isFinishGame ? 1 : 0,
+                    isGameReady: this.isGameReady(),
+                    clients: clientInfos,
+                };
+            } else {
+                return {};
             }
-
-            return {
-                id: this.id,
-                name: this.roomName,
-                countdown: this.countdown,
-                master: this.masterName,
-                isGameRunning: this.game !== undefined && this.game !== null && !this.game.isFinishGame ? 1 : 0,
-                isGameReady: this.isGameReady(),
-                clients: clientInfos,
-            };
-        } else {
-            return {};
-        }
     }
 
     /**

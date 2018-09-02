@@ -5,7 +5,6 @@ class LoginAction extends Action {
      * @memberof LoginAction
      */
     action(data) {
-        new LoadAction().action();
         Socket.getInstance().requestLogin(data);
     }
 

@@ -4,6 +4,7 @@ class FrontCoverScene extends BaseScene {
         this.nameInput = null;
         this.playButton = null;
         this.messageBackground = null;
+        this.soundInfo = null;
     }
 
     /**
@@ -12,7 +13,6 @@ class FrontCoverScene extends BaseScene {
      */
     preload() {
         this.load.image('frontCoverBackground', 'assets/frontcover/FrontCoverBackground.png');
-        this.load.image('frontCoverMessageBackground', 'assets/frontcover/FrontCoverMessageBackground.png');
         this.load.spritesheet('frontCoverPlayButton', 'assets/frontcover/FrontCoverPlayButton.png', {
             frameWidth: 90,
             frameHeight: 90
@@ -50,8 +50,11 @@ class FrontCoverScene extends BaseScene {
             self.onLogin();
         });
         //// create message background
-        this.messageBackground = this.add.image(525, 400, 'frontCoverMessageBackground').setInteractive();
+        this.messageBackground = this.add.image(525, 400, 'messageBackground').setInteractive();
         this.messageBackground.visible = false;
+        //// create sound info
+        this.soundInfo = new SoundInfo(this);
+        this.soundInfo.onInit();
 
         super.create();
     }
@@ -108,6 +111,7 @@ class FrontCoverScene extends BaseScene {
         this.nameInput.style.display = 'block';
         this.nameInput.blur();
         this.playButton.input.enabled = true;
+        this.soundInfo.onUpdateVolume();
     }
 
     /**
@@ -121,6 +125,7 @@ class FrontCoverScene extends BaseScene {
 
         this.nameInput.style.display = 'none';
         this.playButton.input.enabled = false;
+        this.soundInfo.onSwitchInfo(false);
     }
 
     /**

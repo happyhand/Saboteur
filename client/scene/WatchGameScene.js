@@ -12,6 +12,7 @@ class WatchGameScene extends BaseScene {
         this.gameFinishAnims = null;
         this.enableMask = null;
         this.messageBackground = null;
+        this.soundInfo = null;
     }
 
     /**
@@ -22,58 +23,6 @@ class WatchGameScene extends BaseScene {
         this.load.image('watchGameBackground', 'assets/watchgame/WatchGameBackground.png');
         this.load.image('watchGameLogBar', 'assets/watchgame/WatchGameLogBar.png');
         this.load.image('watchGameLogSlider', 'assets/watchgame/WatchGameLogSlider.png');
-        this.load.image('watchGameFinishBackground', 'assets/watchgame/WatchGameFinishBackground.png');
-        this.load.image('watchGameGoodManWinMark', 'assets/watchgame/WatchGameGoodManWinMark.png');
-        this.load.image('watchGameBadManWinMark', 'assets/watchgame/WatchGameBadManWinMark.png');
-        this.load.image('watchGameFinishInfoFrame', 'assets/watchgame/WatchGameFinishInfoFrame.png');
-        this.load.image('watchGameFinishExitButton', 'assets/watchgame/WatchGameFinishExitButton.png');
-        this.load.image('watchGameEnableMask', 'assets/watchgame/WatchGameEnableMask.png');
-        this.load.image('watchGameMessageBackground', 'assets/watchgame/WatchGameMessageBackground.png');
-        this.load.spritesheet('watchGameCard', 'assets/watchgame/WatchGameCard.png', {
-            frameWidth: 90,
-            frameHeight: 125
-        });
-        this.load.spritesheet('watchGameCollapseAnims', 'assets/watchgame/WatchGameCollapseAnims.png', {
-            frameWidth: 72,
-            frameHeight: 100
-        });
-        this.load.spritesheet('watchGameDigAnims', 'assets/watchgame/WatchGameDigAnims.png', {
-            frameWidth: 72,
-            frameHeight: 100
-        });
-        this.load.spritesheet('watchGamePlayerInfo', 'assets/watchgame/WatchGamePlayerInfo.png', {
-            frameWidth: 100,
-            frameHeight: 115
-        });
-        this.load.spritesheet('watchGameExitButton', 'assets/watchgame/WatchGameExitButton.png', {
-            frameWidth: 34,
-            frameHeight: 34
-        });
-        this.load.spritesheet('watchGameLogPicture', 'assets/watchgame/WatchGameLogPicture.png', {
-            frameWidth: 100,
-            frameHeight: 100
-        });
-        this.load.spritesheet('watchGameCardNo', 'assets/watchgame/WatchGameCardNo.png', {
-            frameWidth: 40,
-            frameHeight: 40
-        });
-        this.load.spritesheet('watchGameLocks', 'assets/watchgame/WatchGameLocks.png', {
-            frameWidth: 30,
-            frameHeight: 30
-        });
-        this.load.spritesheet('watchGameGoodManWinAnims', 'assets/watchgame/WatchGameGoodManWinAnims.png', {
-            frameWidth: 450,
-            frameHeight: 350
-        });
-        this.load.spritesheet('watchGameBadManWinAnims', 'assets/watchgame/WatchGameBadManWinAnims.png', {
-            frameWidth: 450,
-            frameHeight: 350
-        });
-        this.load.audio('game', 'assets/sound/Game.mp3');
-        this.load.audio('actionCountDown', 'assets/sound/ActionCountDown.mp3');
-        this.load.audio('putCard', 'assets/sound/PutCard.mp3');
-        this.load.audio('goodManWin', 'assets/sound/GoodManWin.mp3');
-        this.load.audio('badManWin', 'assets/sound/BadManWin.mp3');
     }
 
     /**
@@ -97,15 +46,14 @@ class WatchGameScene extends BaseScene {
         this.gameFinishAnims = new WatchGameFinishAnims(this);
         this.gameFinishAnims.onInit();
         //// create message background
-        this.enableMask = this.add.image(525, 400, 'watchGameEnableMask').setInteractive();
+        this.enableMask = this.add.image(525, 400, 'enableMask').setInteractive();
         this.enableMask.visible = false;
         //// create message background
-        this.messageBackground = this.add.image(525, 400, 'watchGameMessageBackground').setInteractive();
+        this.messageBackground = this.add.image(525, 400, 'messageBackground').setInteractive();
         this.messageBackground.visible = false;
-        //// create sound
-        SoundService.getInstance().onRegister('game', this.sound.add('game'));
-        SoundService.getInstance().onRegister('goodManWin', this.sound.add('goodManWin'));
-        SoundService.getInstance().onRegister('badManWin', this.sound.add('badManWin'));
+        //// create sound info
+        this.soundInfo = new SoundInfo(this);
+        this.soundInfo.onInit();
 
         super.create();
     }
@@ -187,6 +135,7 @@ class WatchGameScene extends BaseScene {
         }
 
         this.gameLog.onEnable();
+        this.soundInfo.onUpdateVolume();
         this.onSwitchActionButton(true);
     }
 
@@ -201,6 +150,7 @@ class WatchGameScene extends BaseScene {
 
         this.gameLog.onDisable(true);
         this.gameFinishAnims.unPlay();
+        this.soundInfo.onSwitchInfo(false);
         this.onSwitchActionButton(false);
     }
 
@@ -214,7 +164,7 @@ class WatchGameScene extends BaseScene {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 5; j++) {
                 let key = i + '_' + j;
-                let mapCard = this.add.sprite(64 + i * 72, 101 + j * 100, 'watchGameCard');
+                let mapCard = this.add.sprite(64 + i * 72, 101 + j * 100, 'gameCard');
                 mapCard.setScale(0.8);
                 mapCard.visible = false;
                 this.mapCards[key] = mapCard;
@@ -223,7 +173,7 @@ class WatchGameScene extends BaseScene {
         //// create collapse anims
         this.anims.create({
             key: 'WatchGameCollapseAnims',
-            frames: this.anims.generateFrameNumbers('watchGameCollapseAnims', {
+            frames: this.anims.generateFrameNumbers('gameCollapseAnims', {
                 start: 0,
                 end: 3
             }),
@@ -232,12 +182,12 @@ class WatchGameScene extends BaseScene {
             hideOnComplete: true
         });
 
-        this.collapseAnims = this.add.sprite(64, 101, 'watchGameCollapseAnims');
+        this.collapseAnims = this.add.sprite(64, 101, 'gameCollapseAnims');
         this.collapseAnims.visible = false;
         //// create dig anims
         this.anims.create({
             key: 'WatchGameDigAnims',
-            frames: this.anims.generateFrameNumbers('watchGameDigAnims', {
+            frames: this.anims.generateFrameNumbers('gameDigAnims', {
                 start: 0,
                 end: 3
             }),
@@ -246,7 +196,7 @@ class WatchGameScene extends BaseScene {
             hideOnComplete: true
         });
 
-        this.digAnims = this.add.sprite(64, 101, 'watchGameameDigAnims');
+        this.digAnims = this.add.sprite(64, 101, 'gameameDigAnims');
         this.digAnims.visible = false;
     }
 
@@ -256,7 +206,7 @@ class WatchGameScene extends BaseScene {
      */
     onCreateExitButton() {
         let self = this;
-        this.exitButton = this.add.sprite(1025, 25, 'watchGameExitButton').setInteractive();
+        this.exitButton = this.add.sprite(1025, 25, 'exitButton').setInteractive();
         this.exitButton.on('pointerover', function (pointer) {
             this.setFrame(1);
         });
@@ -276,7 +226,7 @@ class WatchGameScene extends BaseScene {
         //// anims
         this.anims.create({
             key: 'WatchPlayerAction',
-            frames: this.anims.generateFrameNumbers('watchGamePlayerInfo', {
+            frames: this.anims.generateFrameNumbers('gamePlayerInfo', {
                 start: 0,
                 end: 1
             }),
@@ -298,7 +248,7 @@ class WatchGameScene extends BaseScene {
      * @memberof WatchGameScene
      */
     onCreateGameRoundInfo() {
-        this.watchGameCardNo = this.add.sprite(67, 633, 'watchGameCardNo');
+        this.watchGameCardNo = this.add.sprite(67, 633, 'gameCardNo');
     }
 
     /**

@@ -38,12 +38,12 @@ class MessageScene extends BaseScene {
         this.messageOkButton.on('pointerup', function (pointer) {
             self.onCloseMessage();
         });
-         //// create messgae cancel button
-         this.messageCancelButton = this.add.image(600, 452, 'messageCancelButton').setInteractive();
-         this.messageCancelButton.on('pointerup', function (pointer) {
-             self.onCloseMessage();
-         });
-          //// create messgae watch button
+        //// create messgae cancel button
+        this.messageCancelButton = this.add.image(600, 452, 'messageCancelButton').setInteractive();
+        this.messageCancelButton.on('pointerup', function (pointer) {
+            self.onCloseMessage();
+        });
+        //// create messgae watch button
         this.messageWatchButton = this.add.image(450, 452, 'messageWatchButton').setInteractive();
         this.messageWatchButton.on('pointerup', function (pointer) {
             let watchRoomID = this.roomID;
@@ -138,6 +138,10 @@ class MessageScene extends BaseScene {
                 break;
             case MessageType.SYS_FORCE_DISCONNECTED:
                 this.onShowMessagee([400, 300], 'Server refused connect.', true);
+                break;
+            case MessageType.SYS_SERVER_ERROR:
+                let errorCode = data[1];
+                this.onShowMessagee([402, 300], 'Server happened error.\n\nError code( ' + errorCode + ' )');
                 break;
         }
 

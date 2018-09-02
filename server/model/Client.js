@@ -36,94 +36,98 @@ class Client {
      * @memberof Client
      */
     onRequest(client, dataJSON) {
-        let data = JSON.parse(dataJSON);
-        let type = data[0];
-        switch (type) {
-            case 'login':
-                let nickname = data[1];
-                client.doLogin(nickname);
-                break;
-            case 'createRoom':
-                let roomName = data[1][0];
-                let countdownTime = data[1][1];
-                client.doCreateRoom(roomName, countdownTime);
-                break;
-            case 'joinRoom':
-                let roomID = data[1];
-                client.doJoinRoom(roomID, false);
-                break;
-            case 'leaveRoom':
-                client.doLeaveRoom();
-                break;
-            case 'kick':
-                let kickName = data[1];
-                client.doKick(kickName);
-                break;
-            case 'roomChat':
-                let roomMessage = data[1];
-                client.doRoomChat(roomMessage);
-                break;
-            case 'updateReadyGame':
-                let isReady = data[1] === 1;
-                client.doUpdateReadyGame(isReady);
-                break;
-            case 'addRobot':
-                client.doAddRobot();
-                break;
-            case 'createGame':
-                client.doCreateGame();
-                break;
-            case 'digCard':
-                let digKey = data[1][0];
-                let digType = data[1][1];
-                let isReverse = data[1][2] === 1;
-                let digCardNo = data[1][3];
-                client.doDigCard(digKey, digType, isReverse, digCardNo);
-                break;
-            case 'fixCard':
-                let fixNickname = data[1][0];
-                let fixType = data[1][1];
-                let fixCardNo = data[1][2];
-                client.doFixCard(fixNickname, fixType, fixCardNo);
-                break;
-            case 'atkCard':
-                let atkNickname = data[1][0];
-                let atkType = data[1][1];
-                let atkCardNo = data[1][2];
-                client.doAtkCard(atkNickname, atkType, atkCardNo);
-                break;
-            case 'CollapseCard':
-                let collapseKey = data[1][0];
-                let collapseCardNo = data[1][1];
-                client.doCollapseCard(collapseKey, collapseCardNo);
-                break;
-            case 'watchCard':
-                let watchKey = data[1][0];
-                let watchCardNo = data[1][1];
-                client.doWatchCard(watchKey, watchCardNo);
-                break;
-            case 'giveUpCard':
-                let giveUpCardNo = data[1];
-                client.doGiveUpCard(giveUpCardNo);
-                break;
-            case 'reGame':
-                client.doReGame();
-                break;
-            case 'leaveGame':
-                client.doLeaveGame();
-                break;
-            case 'gameChat':
-                let gameMessage = data[1];
-                client.doGameChat(gameMessage);
-                break;
-            case 'joinWatchGame':
-                let watchRoomID = data[1];
-                client.doJoinWatchGame(watchRoomID);
-                break;
-            case 'leaveWatchGame':
-                let leaveWatchRoomID = data[1];
-                client.doLeaveWatchGame(leaveWatchRoomID);
-                break;
+        try {
+            let data = JSON.parse(dataJSON);
+            let type = data[0];
+            switch (type) {
+                case 'login':
+                    let nickname = data[1];
+                    client.doLogin(nickname);
+                    break;
+                case 'createRoom':
+                    let roomName = data[1][0];
+                    let countdownTime = data[1][1];
+                    client.doCreateRoom(roomName, countdownTime);
+                    break;
+                case 'joinRoom':
+                    let roomID = data[1];
+                    client.doJoinRoom(roomID, false);
+                    break;
+                case 'leaveRoom':
+                    client.doLeaveRoom();
+                    break;
+                case 'kick':
+                    let kickName = data[1];
+                    client.doKick(kickName);
+                    break;
+                case 'roomChat':
+                    let roomMessage = data[1];
+                    client.doRoomChat(roomMessage);
+                    break;
+                case 'updateReadyGame':
+                    let isReady = data[1] === 1;
+                    client.doUpdateReadyGame(isReady);
+                    break;
+                case 'addRobot':
+                    client.doAddRobot();
+                    break;
+                case 'createGame':
+                    client.doCreateGame();
+                    break;
+                case 'digCard':
+                    let digKey = data[1][0];
+                    let digType = data[1][1];
+                    let isReverse = data[1][2] === 1;
+                    let digCardNo = data[1][3];
+                    client.doDigCard(digKey, digType, isReverse, digCardNo);
+                    break;
+                case 'fixCard':
+                    let fixNickname = data[1][0];
+                    let fixType = data[1][1];
+                    let fixCardNo = data[1][2];
+                    client.doFixCard(fixNickname, fixType, fixCardNo);
+                    break;
+                case 'atkCard':
+                    let atkNickname = data[1][0];
+                    let atkType = data[1][1];
+                    let atkCardNo = data[1][2];
+                    client.doAtkCard(atkNickname, atkType, atkCardNo);
+                    break;
+                case 'CollapseCard':
+                    let collapseKey = data[1][0];
+                    let collapseCardNo = data[1][1];
+                    client.doCollapseCard(collapseKey, collapseCardNo);
+                    break;
+                case 'watchCard':
+                    let watchKey = data[1][0];
+                    let watchCardNo = data[1][1];
+                    client.doWatchCard(watchKey, watchCardNo);
+                    break;
+                case 'giveUpCard':
+                    let giveUpCardNo = data[1];
+                    client.doGiveUpCard(giveUpCardNo);
+                    break;
+                case 'reGame':
+                    client.doReGame();
+                    break;
+                case 'leaveGame':
+                    client.doLeaveGame();
+                    break;
+                case 'gameChat':
+                    let gameMessage = data[1];
+                    client.doGameChat(gameMessage);
+                    break;
+                case 'joinWatchGame':
+                    let watchRoomID = data[1];
+                    client.doJoinWatchGame(watchRoomID);
+                    break;
+                case 'leaveWatchGame':
+                    let leaveWatchRoomID = data[1];
+                    client.doLeaveWatchGame(leaveWatchRoomID);
+                    break;
+            }
+        } catch (error) {
+            client.onServerError(-99, error);
         }
     }
     //#endregion
@@ -135,7 +139,23 @@ class Client {
      * @memberof Client
      */
     doLogin(nickname) {
-        this.lobby.onLogin(this, nickname);
+        try {
+            this.lobby.onLogin(this, nickname);
+        } catch (error) {
+            this.onServerError(0, error);
+        }
+    }
+
+    /**
+     * 請求加入 Lobby
+     * @memberof Client
+     */
+    doJoinLobby() {
+        try {
+            this.lobby.onJoinLobby(this);
+        } catch (error) {
+            this.onServerError(1, error);
+        }
     }
 
     /**
@@ -145,15 +165,11 @@ class Client {
      * @memberof Client
      */
     doCreateRoom(roomName, countdownTime) {
-        this.lobby.onCreateRoom(this, roomName, countdownTime, this.nickname);
-    }
-
-    /**
-     * 請求加入 Lobby
-     * @memberof Client
-     */
-    doJoinLobby() {
-        this.lobby.onJoinLobby(this);
+        try {
+            this.lobby.onCreateRoom(this, roomName, countdownTime, this.nickname);
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -162,9 +178,13 @@ class Client {
      * @memberof Client
      */
     doJoinRoom(roomID) {
-        let room = this.lobby.getRoom(roomID);
-        if (!room) return;
-        room.onJoin(this);
+        try {
+            let room = this.lobby.getRoom(roomID);
+            if (!room) return;
+            room.onJoin(this);
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -172,9 +192,13 @@ class Client {
      * @memberof Client
      */
     doLeaveRoom() {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        room.onLeave(this, false);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            room.onLeave(this, false);
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -183,9 +207,13 @@ class Client {
      * @memberof Client
      */
     doKick(kickName) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        room.onKickClient(kickName);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            room.onKickClient(kickName);
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -194,9 +222,13 @@ class Client {
      * @memberof Client
      */
     doRoomChat(message) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        room.onBroadcastRoomChat(this.nickname, message);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            room.onBroadcastRoomChat(this.nickname, message);
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -205,10 +237,14 @@ class Client {
      * @memberof Client
      */
     doUpdateReadyGame(isReady) {
-        this.isReadyGame = isReady
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        room.onBroadcastCurrentRoomInfo();
+        try {
+            this.isReadyGame = isReady
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            room.onBroadcastCurrentRoomInfo();
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -216,9 +252,13 @@ class Client {
      * @memberof Client
      */
     doAddRobot() {
-        let robotClass = require('../model/Robot.js');
-        let robot = new robotClass(this.socket);
-        robot.doJoinRoom(this.roomID);
+        try {
+            let robotClass = require('../model/Robot.js');
+            let robot = new robotClass(this.socket);
+            robot.doJoinRoom(this.roomID);
+        } catch (error) {
+            this.onServerError(2, error);
+        }
     }
 
     /**
@@ -226,9 +266,13 @@ class Client {
      * @memberof Client
      */
     doCreateGame() {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        room.onCreateGame(this);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            room.onCreateGame(this);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -240,11 +284,15 @@ class Client {
      * @memberof Client
      */
     doDigCard(digKey, digType, isReverse, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onDigCard(this.nickname, digKey, digType, isReverse, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onDigCard(this.nickname, digKey, digType, isReverse, cardNo);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -255,11 +303,15 @@ class Client {
      * @memberof Client
      */
     doFixCard(targetNickname, fixType, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onFixCard(this.nickname, targetNickname, fixType, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onFixCard(this.nickname, targetNickname, fixType, cardNo);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -270,11 +322,15 @@ class Client {
      * @memberof Client
      */
     doAtkCard(targetNickname, atkType, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onAtkCard(this.nickname, targetNickname, atkType, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onAtkCard(this.nickname, targetNickname, atkType, cardNo);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -284,11 +340,15 @@ class Client {
      * @memberof Client
      */
     doCollapseCard(collapseKey, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onCollapseCard(this.nickname, collapseKey, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onCollapseCard(this.nickname, collapseKey, cardNo);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -298,11 +358,15 @@ class Client {
      * @memberof Client
      */
     doWatchCard(watchKey, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onWatchCard(this.nickname, watchKey, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onWatchCard(this.nickname, watchKey, cardNo);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -311,11 +375,15 @@ class Client {
      * @memberof Client
      */
     doGiveUpCard(cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onGiveUpCard(this.nickname, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onGiveUpCard(this.nickname, cardNo);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -323,12 +391,16 @@ class Client {
      * @memberof Client
      */
     doReGame() {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onLeave(this);
-        room.onReJoin(this);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onLeave(this);
+            room.onReJoin(this);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -336,12 +408,16 @@ class Client {
      * @memberof Client
      */
     doLeaveGame() {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onLeave(this, false);
-        this.doLeaveRoom();
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onLeave(this, false);
+            this.doLeaveRoom();
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -350,11 +426,15 @@ class Client {
      * @memberof Client
      */
     doGameChat(message) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onBroadcastGameChat(this.nickname, message);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onBroadcastGameChat(this.nickname, message);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -363,11 +443,15 @@ class Client {
      * @memberof Client
      */
     doJoinWatchGame(roomID) {
-        let room = this.lobby.getRoom(roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onJoinWatchGame(this);
+        try {
+            let room = this.lobby.getRoom(roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onJoinWatchGame(this);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -376,11 +460,15 @@ class Client {
      * @memberof Client
      */
     doLeaveWatchGame(roomID) {
-        let room = this.lobby.getRoom(roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onLeaveWatchGame(this);
+        try {
+            let room = this.lobby.getRoom(roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onLeaveWatchGame(this);
+        } catch (error) {
+            this.onServerError(3, error);
+        }
     }
 
     /**
@@ -388,7 +476,11 @@ class Client {
      * @memberof Client
      */
     doLogout() {
-        this.lobby.onLogout(this.nickname);
+        try {
+            this.lobby.onLogout(this.nickname);
+        } catch (error) {
+            this.onServerError(-1, error);
+        }
     }
     //#endregion
 
@@ -643,8 +735,20 @@ class Client {
      * @memberof Client
      */
     onForceDisconnect() {
-        this.socket.emit('response', ['forceDisconnected', '']);
+        this.onSendResponse('forceDisconnected', '');
         this.socket.disconnect(true);
+    }
+
+    /**
+     * 伺服器發生錯誤
+     * @memberof Client
+     */
+    onServerError(code, error) {
+        this.onSendResponse('serverError', code);
+        console.log('\n====================== Server Error =========================');
+        console.log('Error Code ::', code);
+        console.log('Error Message ::', error.message);
+        console.log('Error Line ::', error.stack.split('\n')[1].trim());
     }
 
     /**
@@ -654,7 +758,11 @@ class Client {
      * @memberof Client
      */
     onSendResponse(event, data) {
-        this.socket.emit('response', JSON.stringify([event, data]));
+        try {
+            this.socket.emit('response', JSON.stringify([event, data]));
+        } catch (error) {
+            this.onServerError(-66, error);
+        }
     }
     //#endregion
 }

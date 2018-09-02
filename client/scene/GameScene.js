@@ -14,6 +14,7 @@ class GameScene extends BaseScene {
         this.gameDescription = null;
         this.enableMask = null;
         this.messageBackground = null;
+        this.soundInfo = null;
     }
 
     /**
@@ -33,54 +34,20 @@ class GameScene extends BaseScene {
         this.load.image('gameChatPictureButton', 'assets/game/GameChatPictureButton.png');
         this.load.image('gameChatPictureFrame', 'assets/game/GameChatPictureFrame.png');
         this.load.image('gameSendButton', 'assets/game/GameSendButton.png');
-        this.load.image('gameFinishBackground', 'assets/game/GameFinishBackground.png');
-        this.load.image('gameGoodManWinMark', 'assets/game/GameGoodManWinMark.png');
-        this.load.image('gameBadManWinMark', 'assets/game/GameBadManWinMark.png');
-        this.load.image('gameFinishInfoFrame', 'assets/game/GameFinishInfoFrame.png');
         this.load.image('gameFinishReJoinButton', 'assets/game/GameFinishReJoinButton.png');
-        this.load.image('gameFinishExitButton', 'assets/game/GameFinishExitButton.png');
         this.load.image('gameDescriptionButton', 'assets/game/GameDescriptionButton.png');
         this.load.image('gameDescriptionBackground', 'assets/game/GameDescriptionBackground.png');
-        this.load.image('gameEnableMask', 'assets/game/GameEnableMask.png');
-        this.load.image('gameMessageBackground', 'assets/game/GameMessageBackground.png');
-        this.load.spritesheet('gameCard', 'assets/game/GameCard.png', {
-            frameWidth: 90,
-            frameHeight: 125
-        });
         this.load.spritesheet('gameMapActionCard', 'assets/game/GameMapActionCard.png', {
             frameWidth: 72,
             frameHeight: 100
         });
-        this.load.spritesheet('gameCollapseAnims', 'assets/game/GameCollapseAnims.png', {
-            frameWidth: 72,
-            frameHeight: 100
-        });
-        this.load.spritesheet('gameDigAnims', 'assets/game/GameDigAnims.png', {
-            frameWidth: 72,
-            frameHeight: 100
-        });
+
         this.load.spritesheet('gameRole', 'assets/game/GameRole.png', {
             frameWidth: 121,
             frameHeight: 186
         });
-        this.load.spritesheet('gamePlayerInfo', 'assets/game/GamePlayerInfo.png', {
-            frameWidth: 100,
-            frameHeight: 115
-        });
-        this.load.spritesheet('gameExitButton', 'assets/game/GameExitButton.png', {
-            frameWidth: 34,
-            frameHeight: 34
-        });
-        this.load.spritesheet('gameChatPicture', 'assets/game/GameChatPicture.png', {
-            frameWidth: 100,
-            frameHeight: 100
-        });
         this.load.spritesheet('gameChatPictureSelect', 'assets/game/GameChatPictureSelect.png', {
             frameWidth: 25,
-            frameHeight: 30
-        });
-        this.load.spritesheet('gameLocks', 'assets/game/GameLocks.png', {
-            frameWidth: 30,
             frameHeight: 30
         });
         this.load.spritesheet('gameAppointAction', 'assets/game/GameAppointAction.png', {
@@ -99,10 +66,6 @@ class GameScene extends BaseScene {
             frameWidth: 60,
             frameHeight: 60
         });
-        this.load.spritesheet('gameCardNo', 'assets/game/GameCardNo.png', {
-            frameWidth: 40,
-            frameHeight: 40
-        });
         this.load.spritesheet('gameMainLocks', 'assets/game/GameMainLocks.png', {
             frameWidth: 45,
             frameHeight: 45
@@ -119,14 +82,6 @@ class GameScene extends BaseScene {
         loadActionAnims('gameActionAnimsF1', 'assets/game/GameActionAnimsF1.png');
         loadActionAnims('gameActionAnimsF2', 'assets/game/GameActionAnimsF2.png');
         loadActionAnims('gameActionAnimsF3', 'assets/game/GameActionAnimsF3.png');
-        this.load.spritesheet('gameGoodManWinAnims', 'assets/game/GameGoodManWinAnims.png', {
-            frameWidth: 450,
-            frameHeight: 350
-        });
-        this.load.spritesheet('gameBadManWinAnims', 'assets/game/GameBadManWinAnims.png', {
-            frameWidth: 450,
-            frameHeight: 350
-        });
         this.load.spritesheet('gameDescription', 'assets/game/GameDescription.png', {
             frameWidth: 650,
             frameHeight: 600
@@ -134,10 +89,6 @@ class GameScene extends BaseScene {
         this.load.spritesheet('gameDescriptionSelect', 'assets/game/GameDescriptionSelect.png', {
             frameWidth: 50,
             frameHeight: 60
-        });
-        this.load.spritesheet('gameDescriptionExitButton', 'assets/game/GameDescriptionExitButton.png', {
-            frameWidth: 34,
-            frameHeight: 34
         });
     }
 
@@ -169,11 +120,14 @@ class GameScene extends BaseScene {
         //// create game description
         this.onCreateGameDescription();
         //// create message background
-        this.enableMask = this.add.image(525, 400, 'gameEnableMask').setInteractive();
+        this.enableMask = this.add.image(525, 400, 'enableMask').setInteractive();
         this.enableMask.visible = false;
         //// create message background
-        this.messageBackground = this.add.image(525, 400, 'gameMessageBackground').setInteractive();
+        this.messageBackground = this.add.image(525, 400, 'messageBackground').setInteractive();
         this.messageBackground.visible = false;
+        //// create sound info
+        this.soundInfo = new SoundInfo(this);
+        this.soundInfo.onInit();
 
         super.create();
     }
@@ -273,6 +227,7 @@ class GameScene extends BaseScene {
 
         this.gameChat.onEnable();
         this.gameDescription.onCloseGameDescription();
+        this.soundInfo.onUpdateVolume();
         this.onSwitchActionButton(true);
     }
 
@@ -289,6 +244,7 @@ class GameScene extends BaseScene {
         this.mainPlayerInfo.unAction();
         this.gameFinishAnims.unPlay();
         this.gameDescription.onCloseGameDescription();
+        this.soundInfo.onSwitchInfo(false);
         this.onSwitchActionButton(false);
     }
 
@@ -344,7 +300,7 @@ class GameScene extends BaseScene {
      */
     onCreateExitButton() {
         let self = this;
-        let exitButton = this.add.sprite(1025, 25, 'gameExitButton').setInteractive();
+        let exitButton = this.add.sprite(1025, 25, 'exitButton').setInteractive();
         exitButton.on('pointerover', function (pointer) {
             this.setFrame(1);
         });

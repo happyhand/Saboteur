@@ -18,7 +18,7 @@ class GameDescription extends BaseModule {
         let frame = this.scene.add.image(525, 400, 'gameDescriptionBackground').setInteractive();
         this.group.add(frame);
         //// create exit button
-        let exitButton = this.scene.add.sprite(1025, 25, 'gameExitButton').setInteractive();
+        let exitButton = this.scene.add.sprite(1025, 25, 'exitButton').setInteractive();
         exitButton.on('pointerover', function (pointer) {
             this.setFrame(1);
         });

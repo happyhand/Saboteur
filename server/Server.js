@@ -1,8 +1,8 @@
 //// === Http ===
 const Client = require('./model/Client.js');
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 io.on('connection', (socket) => {
     let clientClass = require('./model/Client.js');
     new clientClass(socket);
@@ -13,6 +13,8 @@ http.listen(6699, function () {
     let lobby = require('./model/Lobby.js').getInstance();
     lobby.setServer(io);
 });
+
+// throw new Error('Test');
 
 // http.listen(9453, function () {
 //     console.log('Server start on *:9453');

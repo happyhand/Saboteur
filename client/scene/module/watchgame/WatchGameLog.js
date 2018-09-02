@@ -52,10 +52,11 @@ class WatchGameLog extends BaseModule {
     onCreateDrag() {
         let self = this;
         this.bar = this.scene.add.image(1011, 400, 'watchGameLogBar').setInteractive();
-        this.slider = this.scene.add.image(BOTTOM_OF_WATCH_GAME_CHAT_SLIDER.x, BOTTOM_OF_WATCH_GAME_CHAT_SLIDER.y, 'watchGameLogSlider').setInteractive();
-        this.scene.input.setDraggable(this.slider);
-        this.scene.input.on('drag', function (pointer, slider, dragX, dragY) {
-            self.onDragSlider(dragY);
+        this.slider = this.scene.add.image(BOTTOM_OF_WATCH_GAME_CHAT_SLIDER.x, BOTTOM_OF_WATCH_GAME_CHAT_SLIDER.y, 'watchGameLogSlider').setInteractive({
+            draggable: true
+        });
+        this.slider.on('drag', function (pointer, slider, dragX, dragY) {
+            self.onDragSlider(pointer.y);
         });
     }
 
@@ -94,7 +95,7 @@ class WatchGameLog extends BaseModule {
             });
             messageObject.setText(InputService.onBreakTxtInput(messageObject, message, this.mask.width - 10)); //// max widht of sender txt is mask width
         } else {
-            messageObject = this.scene.add.sprite(60, 55, 'watchGameLogPicture');
+            messageObject = this.scene.add.sprite(60, 55, 'chatPicture');
             messageObject.setFrame(message.replace(ChatPictureType.ChatPicture_NO, ''));
         }
 

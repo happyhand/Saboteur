@@ -56,11 +56,12 @@ class RoomChat extends BaseModule {
      */
     onCreateDrag() {
         let self = this;
-        this.bar = this.scene.add.image(984, 332.5, 'roomChatBar').setInteractive();
-        this.slider = this.scene.add.image(BOTTOM_OF_ROOM_CHAT_SLIDER.x, BOTTOM_OF_ROOM_CHAT_SLIDER.y, 'roomChatSlider').setInteractive();
-        this.scene.input.setDraggable(this.slider);
-        this.scene.input.on('drag', function (pointer, slider, dragX, dragY) {
-            self.onDragSlider(dragY);
+        this.bar = this.scene.add.image(984, 332.5, 'roomChatBar');
+        this.slider = this.scene.add.image(BOTTOM_OF_ROOM_CHAT_SLIDER.x, BOTTOM_OF_ROOM_CHAT_SLIDER.y, 'roomChatSlider').setInteractive({
+            draggable: true
+        });
+        this.slider.on('drag', function (pointer, slider, dragX, dragY) {
+            self.onDragSlider(pointer.y);
         });
     }
 
@@ -82,7 +83,7 @@ class RoomChat extends BaseModule {
         let frame = this.scene.add.image(897, 432, 'roomChatPictureFrame');
         this.pictureGroup.add(frame);
         //// create picture
-        let picture = this.scene.add.sprite(897, 432, 'roomChatPicture').setInteractive();
+        let picture = this.scene.add.sprite(897, 432, 'chatPicture').setInteractive();
         picture.on('pointerup', function (pointer) {
             Phaser.Actions.Call(self.pictureGroup.getChildren(), function (element) {
                 element.visible = false;
@@ -173,7 +174,7 @@ class RoomChat extends BaseModule {
             });
             messageObject.setText(InputService.onBreakTxtInput(messageObject, message, this.mask.width - 10)); //// max widht of sender txt is mask width
         } else {
-            messageObject = this.scene.add.sprite(60, 55, 'roomChatPicture');
+            messageObject = this.scene.add.sprite(60, 55, 'chatPicture');
             messageObject.setFrame(message.replace(ChatPictureType.ChatPicture_NO, ''));
         }
 

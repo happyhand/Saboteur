@@ -198,4 +198,14 @@ class MessageType {
     static get SYS_FORCE_DISCONNECTED() {
         return "SYS_FORCE_DISCONNECTED";
     }
+
+    /**
+     * 伺服器發生錯誤
+     * @readonly
+     * @static
+     * @memberof MessageType
+     */
+    static get SYS_SERVER_ERROR() {
+        return "SYS_SERVER_ERROR";
+    }
 }

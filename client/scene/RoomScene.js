@@ -12,6 +12,7 @@ class RoomScene extends BaseScene {
         this.exitButton = null;
         this.enableMask = null;
         this.messageBackground = null;
+        this.soundInfo = null;
     }
 
     /**
@@ -26,16 +27,6 @@ class RoomScene extends BaseScene {
         this.load.image('roomChatPictureButton', 'assets/room/RoomChatPictureButton.png');
         this.load.image('roomChatPictureFrame', 'assets/room/RoomChatPictureFrame.png');
         this.load.image('roomSendButton', 'assets/room/RoomSendButton.png');
-        this.load.image('roomEnableMask', 'assets/room/RoomEnableMask.png');
-        this.load.image('roomMessageBackground', 'assets/room/RoomMessageBackground.png');
-        this.load.spritesheet('roomExitButton', 'assets/room/RoomExitButton.png', {
-            frameWidth: 34,
-            frameHeight: 34
-        });
-        this.load.spritesheet('roomChatPicture', 'assets/room/RoomChatPicture.png', {
-            frameWidth: 100,
-            frameHeight: 100
-        });
         this.load.spritesheet('roomChatPictureSelect', 'assets/room/RoomChatPictureSelect.png', {
             frameWidth: 25,
             frameHeight: 30
@@ -80,11 +71,14 @@ class RoomScene extends BaseScene {
         //// create player info
         this.onCreatePlayerInfo();
         //// create message background
-        this.enableMask = this.add.image(525, 400, 'roomEnableMask').setInteractive();
+        this.enableMask = this.add.image(525, 400, 'enableMask').setInteractive();
         this.enableMask.visible = false;
         //// create message background
-        this.messageBackground = this.add.image(525, 400, 'roomMessageBackground').setInteractive();
+        this.messageBackground = this.add.image(525, 400, 'messageBackground').setInteractive();
         this.messageBackground.visible = false;
+        //// create sound info
+        this.soundInfo = new SoundInfo(this);
+        this.soundInfo.onInit();
 
         super.create();
     }
@@ -105,12 +99,16 @@ class RoomScene extends BaseScene {
                 this.roomChat.onDisable(true);
                 this.onSleep();
                 break;
+            case ActionType.LOADING:
+                SoundService.getInstance().onStop('idle');
+                break;
             case ActionType.JOIN_LOBBY:
                 this.roomChat.onDisable(true);
                 this.onSleep();
                 break;
             case ActionType.JOIN_ROOM:
                 this.onWake();
+                SoundService.getInstance().onPlay('idle', true);
                 SoundService.getInstance().onPlay('joinRoom');
                 this.roomChat.onEnable();
                 break;
@@ -148,6 +146,7 @@ class RoomScene extends BaseScene {
             return;
         }
 
+        this.soundInfo.onUpdateVolume();
         this.onSwitchActionButton(true);
     }
 
@@ -160,6 +159,7 @@ class RoomScene extends BaseScene {
             return;
         }
 
+        this.soundInfo.onSwitchInfo(false);
         this.onSwitchActionButton(false);
     }
 
@@ -169,7 +169,7 @@ class RoomScene extends BaseScene {
      */
     onCreateExitButton() {
         let self = this;
-        this.exitButton = this.add.sprite(1025, 25, 'roomExitButton').setInteractive();
+        this.exitButton = this.add.sprite(1025, 25, 'exitButton').setInteractive();
         this.exitButton.on('pointerover', function (pointer) {
             this.setFrame(1);
         });

@@ -8,6 +8,7 @@ class LobbyScene extends BaseScene {
         this.createButton = null;
         this.enableMask = null;
         this.messageBackground = null;
+        this.soundInfo = null;
     }
 
     /**
@@ -17,8 +18,6 @@ class LobbyScene extends BaseScene {
     preload() {
         this.load.image('lobbyBackground', 'assets/lobby/LobbyBackground.png');
         this.load.image('lobbyCreateRoomFrame', 'assets/lobby/LobbyCreateRoomFrame.png');
-        this.load.image('lobbyEnableMask', 'assets/lobby/LobbyEnableMask.png');
-        this.load.image('lobbyMessageBackground', 'assets/lobby/LobbyMessageBackground.png');
         this.load.spritesheet('lobbyRoomButton', 'assets/lobby/LobbyRoomButton.png', {
             frameWidth: 70,
             frameHeight: 35
@@ -47,11 +46,14 @@ class LobbyScene extends BaseScene {
         this.createRoom = new CreateRoom(this);
         this.createRoom.onInit();
         //// create message background
-        this.enableMask = this.add.image(525, 400, 'lobbyEnableMask').setInteractive();
+        this.enableMask = this.add.image(525, 400, 'enableMask').setInteractive();
         this.enableMask.visible = false;
         //// create message background
-        this.messageBackground = this.add.image(525, 400, 'lobbyMessageBackground').setInteractive();
+        this.messageBackground = this.add.image(525, 400, 'messageBackground').setInteractive();
         this.messageBackground.visible = false;
+        //// create sound info
+        this.soundInfo = new SoundInfo(this);
+        this.soundInfo.onInit();
 
         super.create();
     }
@@ -86,7 +88,6 @@ class LobbyScene extends BaseScene {
                 break;
             case ActionType.JOIN_ROOM:
                 this.onSleep();
-                SoundService.getInstance().onPlay('idle', true);
                 break;
             case ActionType.JOIN_ROOM_ERROR:
                 this.onSwitchActionButton(true);
@@ -116,6 +117,7 @@ class LobbyScene extends BaseScene {
         roomInput.style.display = 'block';
         roomInput.blur();
         roomInput.value = '';
+        this.soundInfo.onUpdateVolume();
         this.onSwitchActionButton(true);
     }
 
@@ -130,6 +132,7 @@ class LobbyScene extends BaseScene {
 
         let roomInput = document.getElementById('roomInput');
         roomInput.style.display = 'none';
+        this.soundInfo.onSwitchInfo(false);
         this.onSwitchActionButton(false);
     }
 

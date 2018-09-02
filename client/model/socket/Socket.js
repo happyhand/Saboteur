@@ -275,6 +275,9 @@ class Socket {
             case 'forceDisconnected':
                 new ForceConnectAction().action();
                 break;
+            case 'serverError':
+                new MessageAction().action([MessageType.SYS_SERVER_ERROR, data[1]]);
+                break;
         }
     }
 

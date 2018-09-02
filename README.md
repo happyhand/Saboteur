@@ -51,3 +51,11 @@ e. 7人：隨機 5 - 2、4 - 3"
 新增機器人功能\
 新增礦道卡禁能提示\
 新增遊戲說明
+
+# Version 1.2.1 --- 2018/09/2 
+# Server
+新增 trycatch 機制
+# Client
+調整預載資源流程\
+修正 Drag 衝突\
+新增 Sound 組件 (代替原 SoundScene與避免 Drag 衝突)\

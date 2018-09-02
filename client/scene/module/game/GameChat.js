@@ -57,10 +57,11 @@ class GameChat extends BaseModule {
     onCreateDrag() {
         let self = this;
         this.bar = this.scene.add.image(321, 670, 'gameChatBar').setInteractive();
-        this.slider = this.scene.add.image(BOTTOM_OF_GAME_CHAT_SLIDER.x, BOTTOM_OF_GAME_CHAT_SLIDER.y, 'gameChatSlider').setInteractive();
-        this.scene.input.setDraggable(this.slider);
-        this.scene.input.on('drag', function (pointer, slider, dragX, dragY) {
-            self.onDragSlider(dragY);
+        this.slider = this.scene.add.image(BOTTOM_OF_GAME_CHAT_SLIDER.x, BOTTOM_OF_GAME_CHAT_SLIDER.y, 'gameChatSlider').setInteractive({
+            draggable: true
+        });
+        this.slider.on('drag', function (pointer, slider, dragX, dragY) {
+            self.onDragSlider(pointer.y);
         });
     }
 
@@ -82,7 +83,7 @@ class GameChat extends BaseModule {
         let frame = this.scene.add.image(227, 678, 'gameChatPictureFrame');
         this.pictureGroup.add(frame);
         //// create picture
-        let picture = this.scene.add.sprite(225, 676, 'gameChatPicture').setInteractive();
+        let picture = this.scene.add.sprite(225, 676, 'chatPicture').setInteractive();
         picture.on('pointerup', function (pointer) {
             Phaser.Actions.Call(self.pictureGroup.getChildren(), function (element) {
                 element.visible = false;
@@ -173,7 +174,7 @@ class GameChat extends BaseModule {
             });
             messageObject.setText(InputService.onBreakTxtInput(messageObject, message, this.mask.width - 10)); //// max widht of sender txt is mask width
         } else {
-            messageObject = this.scene.add.sprite(60, 55, 'gameChatPicture');
+            messageObject = this.scene.add.sprite(60, 55, 'chatPicture');
             messageObject.setFrame(message.replace(ChatPictureType.ChatPicture_NO, ''));
         }
 

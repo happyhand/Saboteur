@@ -23,7 +23,7 @@ class WatchPlayerInfo extends PlayerInfo {
      * @memberof WatchPlayerInfo
      */
     onCreateInfo() {
-        this.info = this.scene.add.sprite(155, 714.5, 'watchGamePlayerInfo');
+        this.info = this.scene.add.sprite(155, 714.5, 'gamePlayerInfo');
         this.group.add(this.info);
     }
 
@@ -48,7 +48,7 @@ class WatchPlayerInfo extends PlayerInfo {
     onCreateLocks() {
         this.locks = [];
         for (let i = 0; i < 3; i++) {
-            let lock = this.scene.add.sprite(125 + i * 30, 637, 'watchGameLocks');
+            let lock = this.scene.add.sprite(125 + i * 30, 637, 'gameLocks');
             lock.setFrame(i + 3);
             this.group.add(lock);
             this.locks.push(lock);

@@ -12,6 +12,7 @@ class JoinLobbyAction extends Action {
      * @memberof JoinLobbyAction
      */
     response(data) {
+        new LoadAction().action();
         this.do(ActionType.JOIN_LOBBY);
     }
 }

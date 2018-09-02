@@ -14,24 +14,32 @@ class Robot {
     /**
      * 請求加入房間
      * @param {string} roomID
-     * @memberof Client
+     * @memberof Robot
      */
     doJoinRoom(roomID) {
-        let service = require('./core/Service.js');
-        this.nickname = 'Robot-' + service.getRandomID().substring(12, 15);
-        let room = this.lobby.getRoom(roomID);
-        if (!room) return;
-        room.onJoin(this);
+        try {
+            let service = require('./core/Service.js');
+            this.nickname = 'Robot-' + service.getRandomID().substring(12, 15);
+            let room = this.lobby.getRoom(roomID);
+            if (!room) return;
+            room.onJoin(this);
+        } catch (error) {
+            this.onServerError(901, error);
+        }
     }
 
     /**
      * 請求離開房間
-     * @memberof Client
+     * @memberof Robot
      */
     doLeaveRoom() {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        room.onLeave(this, false);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            room.onLeave(this, false);
+        } catch (error) {
+            this.onServerError(902, error);
+        }
     }
 
     /**
@@ -40,14 +48,18 @@ class Robot {
      * @param {string} digType
      * @param {bool} isReverse
      * @param {bool} cardNo
-     * @memberof Client
+     * @memberof Robot
      */
     doDigCard(digKey, digType, isReverse, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onDigCard(this.nickname, digKey, digType, isReverse, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onDigCard(this.nickname, digKey, digType, isReverse, cardNo);
+        } catch (error) {
+            this.onServerError(903, error);
+        }
     }
 
     /**
@@ -55,14 +67,18 @@ class Robot {
      * @param {string} targetNickname
      * @param {string} fixType
      * @param {bool} cardNo
-     * @memberof Client
+     * @memberof Robot
      */
     doFixCard(targetNickname, fixType, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onFixCard(this.nickname, targetNickname, fixType, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onFixCard(this.nickname, targetNickname, fixType, cardNo);
+        } catch (error) {
+            this.onServerError(904, error);
+        }
     }
 
     /**
@@ -70,68 +86,88 @@ class Robot {
      * @param {string} targetNickname
      * @param {string} atkType
      * @param {bool} cardNo
-     * @memberof Client
+     * @memberof Robot
      */
     doAtkCard(targetNickname, atkType, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onAtkCard(this.nickname, targetNickname, atkType, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onAtkCard(this.nickname, targetNickname, atkType, cardNo);
+        } catch (error) {
+            this.onServerError(905, error);
+        }
     }
 
     /**
      * 請求放置崩塌牌
      * @param {string} collapseKey
      * @param {bool} cardNo
-     * @memberof Client
+     * @memberof Robot
      */
     doCollapseCard(collapseKey, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onCollapseCard(this.nickname, collapseKey, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onCollapseCard(this.nickname, collapseKey, cardNo);
+        } catch (error) {
+            this.onServerError(906, error);
+        }
     }
 
     /**
      * 請求放置觀看牌
      * @param {string} watchKey
      * @param {bool} cardNo
-     * @memberof Client
+     * @memberof Robot
      */
     doWatchCard(watchKey, cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onWatchCard(this.nickname, watchKey, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onWatchCard(this.nickname, watchKey, cardNo);
+        } catch (error) {
+            this.onServerError(907, error);
+        }
     }
 
     /**
      * 請求棄牌
      * @param {int} cardNo
-     * @memberof Client
+     * @memberof Robot
      */
     doGiveUpCard(cardNo) {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onGiveUpCard(this.nickname, cardNo);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onGiveUpCard(this.nickname, cardNo);
+        } catch (error) {
+            this.onServerError(908, error);
+        }
     }
 
     /**
      * 請求重新加入房間遊戲
-     * @memberof Client
+     * @memberof Robot
      */
     doReGame() {
-        let room = this.lobby.getRoom(this.roomID);
-        if (!room) return;
-        let game = room.getGame();
-        if (!game) return;
-        game.onLeave(this);
-        room.onReJoin(this);
+        try {
+            let room = this.lobby.getRoom(this.roomID);
+            if (!room) return;
+            let game = room.getGame();
+            if (!game) return;
+            game.onLeave(this);
+            room.onReJoin(this);
+        } catch (error) {
+            this.onServerError(909, error);
+        }
     }
 
     //#endregion
@@ -140,18 +176,22 @@ class Robot {
     /**
      * Robot 加入房間
      * @param {string} roomID
-     * @memberof Client
+     * @memberof Robot
      */
     onJoinRoom(roomID) {
-        this.roomID = roomID;
-        this.isReadyGame = true;
-        this.onSendResponse('addRobot', 1);
-        this.lobby.onBroadcastCurrentRoomList();
+        try {
+            this.roomID = roomID;
+            this.isReadyGame = true;
+            this.onSendResponse('addRobot', 1);
+            this.lobby.onBroadcastCurrentRoomList();
+        } catch (error) {
+            this.onServerError(910, error);
+        }
     }
 
     /**
      * Robot 重新加入房間
-     * @memberof Client
+     * @memberof Robot
      */
     onReJoinRoom() {
         this.isReadyGame = true;
@@ -159,7 +199,7 @@ class Robot {
 
     /**
      * Robot 加入房間 Error
-     * @memberof Client
+     * @memberof Robot
      */
     onJoinRoomError() {
         this.onSendResponse('addRobot', -1);
@@ -167,7 +207,7 @@ class Robot {
 
     /**
      * Robot 離開房間
-     * @memberof Client
+     * @memberof Robot
      */
     onLeaveRoom() {
         this.lobby.onBroadcastCurrentRoomList();
@@ -176,7 +216,7 @@ class Robot {
 
     /**
      * Robot 離開遊戲
-     * @memberof Client
+     * @memberof Robot
      */
     onLeaveGame() {
         //// not work
@@ -186,7 +226,7 @@ class Robot {
      * 回覆客端
      * @param {string} event
      * @param {object} data
-     * @memberof Client
+     * @memberof Robot
      */
     onSendResponse(event, data) {
         this.socket.emit('response', JSON.stringify([event, data]));
@@ -204,6 +244,17 @@ class Robot {
         this.isReadyGame = null;
         this.isRobot = null;
         this.socket = null;
+    }
+
+    /**
+     * 伺服器發生錯誤
+     * @memberof Room
+     */
+    onServerError(code, error) {
+        console.log('\n====================== Server Error =========================');
+        console.log('Error Code ::', code);
+        console.log('Error Message ::', error.message);
+        console.log('Error Line ::', error.stack.split('\n')[1].trim());
     }
     //#endregion
 }
