@@ -5,7 +5,7 @@ class SoundService {
         if (!Class[SOUND_SERVICE_INSTANCE]) {
             Class[SOUND_SERVICE_INSTANCE] = this;
             this.sounds = {};
-            this.volume = 0.2;
+            this.volume = 0.5;
         }
 
         return Class[SOUND_SERVICE_INSTANCE];

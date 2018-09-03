@@ -434,10 +434,19 @@ class Game {
         if (this.actionIndex >= this.clients.length) {
             this.actionIndex = 0;
         }
+        
+        let actionPlayer = this.players[this.actionList[this.actionIndex]];
+        if(!isAction)
+        {
+            if (this.remainCards.length > 0) {
+                if (actionPlayer.cards.length === 0) {
+                    this.onTakeCard(actionPlayer.nickname);
+                }
+            }
+        }
 
         this.onBroadcastGameInfo();
         this.onBroadcastActionPlayer();
-        let actionPlayer = this.players[this.actionList[this.actionIndex]];
         actionPlayer.onAction(this.countdown);
     }
 
@@ -487,7 +496,7 @@ class Game {
      * @memberof Game
      */
     onGameFinish(type) {
-        console.log('Game Finish ::', type);
+        console.log('['+this.room.roomName+'] Game Finish ::', type);
         this.isFinishGame = true;
         this.map['8_0'].isBack = false;
         this.map['8_2'].isBack = false;

@@ -5,7 +5,7 @@ class Client {
         this.nickname = '';
         this.roomID = '';
         this.isReadyGame = false;
-        console.log('Clinet【', socket.id, '】connected | No of sockets :', socket.server.eio.clientsCount);
+        console.log('Clinet connected | No of sockets :', socket.server.eio.clientsCount);
 
         //// socket
         this.socket = socket;
@@ -493,7 +493,7 @@ class Client {
     onLogin(nickname) {
         this.nickname = nickname;
         this.onSendResponse('login', [1, nickname]);
-        console.log('Clinet【', this.socket.id, '】login | No of login :', this.lobby.logins.length);
+        console.log('Clinet【', nickname, '】login | No of login :', this.lobby.logins.length);
 
         this.doJoinLobby();
     }
