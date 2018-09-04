@@ -84,6 +84,18 @@ class CreateRoom extends BaseModule {
 
         let targetRadioButton = this.radioButtons[index];
         targetRadioButton.setFrame(1);
-        this.appointCountdownTime = 10 * (index + 1);
+
+        switch (index) {
+            case 2:
+                this.appointCountdownTime = 60;
+                break;
+            case 1:
+                this.appointCountdownTime = 30;
+                break;
+            case 0:
+            default:
+                this.appointCountdownTime = 10;
+                break;
+        }
     }
 }

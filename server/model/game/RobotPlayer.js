@@ -35,7 +35,7 @@ class RobotPlayer {
      */
     onAction(countdown) {
         let self = this;
-        let randomTime = countdown - (Math.random() * 5 + 2);
+        let randomTime = countdown - (Math.random() * countdown * 0.1 * 2 + 1);
         this.isAction = true;
         this.countdownTime = setInterval(function () {
             countdown--;
@@ -108,12 +108,17 @@ class RobotPlayer {
         }
         //// dig or collapse card
         if (this.canDig()) {
-            let roadCombine = this.identity === 1?goodCards:goodCards.concat(badCards);
+            let roadCombine = this.identity === 1 ? goodCards : goodCards.concat(badCards);
             if (this.doDigOrCollapse(roadCombine, collapseCard, actions)) {
                 return;
             }
         }
         //// give up card
+        if (watchCard) {
+            this.client.doGiveUpCard(watchCard.no);
+            return;
+        }
+
         if (this.identity === 1) {
             if (badCards.length > 0) {
                 this.client.doGiveUpCard(badCards[0].no);
@@ -124,11 +129,6 @@ class RobotPlayer {
                 this.client.doGiveUpCard(goodCards[0].no);
                 return;
             }
-        }
-
-        if (watchCard) {
-            this.client.doGiveUpCard(watchCard.no);
-            return;
         }
 
         let card = this.cards[Math.floor(Math.random() * this.cards.length)];
@@ -159,6 +159,13 @@ class RobotPlayer {
                     break;
                 default:
                     result = this.doDigOrCollapseToMiddleLine(1, roadCards, collapseCard);
+                    if (!result) {
+                        result = this.doDigOrCollapseToTopLine(1, roadCards, collapseCard);
+                    }
+
+                    if (!result) {
+                        result = this.doDigOrCollapseToBottomLine(1, roadCards, collapseCard);
+                    }
                     break;
             }
         } else {
@@ -189,6 +196,13 @@ class RobotPlayer {
                 }
             } else {
                 result = this.doDigOrCollapseToMiddleLine(1, roadCards, collapseCard);
+                if (!result) {
+                    result = this.doDigOrCollapseToTopLine(1, roadCards, collapseCard);
+                }
+
+                if (!result) {
+                    result = this.doDigOrCollapseToBottomLine(1, roadCards, collapseCard);
+                }
             }
         }
 
