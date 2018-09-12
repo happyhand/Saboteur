@@ -8,6 +8,7 @@ class Lobby {
             this.logins = [];
             this.rooms = {};
         }
+        
         return Class[LOBBY_INSTANCE];
     }
 

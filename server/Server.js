@@ -10,11 +10,11 @@ io.on('connection', (socket) => {
 
 http.listen(6699, function () {
     console.log('Server start on *:6699');
+    let dbService = require('./model/core/DBService.js').getInstance();
+    dbService.onInit();
     let lobby = require('./model/Lobby.js').getInstance();
     lobby.setServer(io);
 });
-
-// throw new Error('Test');
 
 // http.listen(9453, function () {
 //     console.log('Server start on *:9453');

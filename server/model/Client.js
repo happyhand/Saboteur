@@ -140,7 +140,18 @@ class Client {
      */
     doLogin(nickname) {
         try {
-            this.lobby.onLogin(this, nickname);
+            let self = this;
+            let dbService = require('./core/DBService.js').getInstance();
+            dbService.onLogin(nickname, function (result) {
+                switch (result) {
+                    case 1:
+                        self.lobby.onLogin(self, nickname);
+                        break;
+                    default:
+                        self.onLoginError(result);
+                        break;
+                }
+            });
         } catch (error) {
             this.onServerError(0, error);
         }
@@ -477,7 +488,19 @@ class Client {
      */
     doLogout() {
         try {
-            this.lobby.onLogout(this.nickname);
+            let self = this;
+            let dbService = require('./core/DBService.js').getInstance();
+            let nickname = this.nickname;
+            dbService.onLogout(nickname, function (result) {
+                switch (result) {
+                    case 1:
+                        self.lobby.onLogout(nickname);
+                        break;
+                    default:
+                        console.log(nickname, 'doLogout', result);
+                        break;
+                }
+            });
         } catch (error) {
             this.onServerError(-1, error);
         }
